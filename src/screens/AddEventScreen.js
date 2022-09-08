@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -11,9 +11,19 @@ import {
 } from 'native-base';
 import {useFormik} from 'formik';
 import * as Yup from 'yup'
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
 const AddEventScreen = () => {
   // traitement formulaire
+  // gesetion de l'affichage des pickers de date
+  const [showDebutDatePicker, setShowDebutDatePicker]=useState(false);
+  const [showFinDatePicker, setShowFinDatePicker]=useState(false);
+
+  //création de ref sur les inputs des champs des dates
+  const debutInputRef= useRef(null)
+  const finInputRef= useRef(null)
+
+
   const validationSchema=Yup.object({
     lieu: Yup.string().required('Le titre est requis'),
     Debut:Yup.date()
@@ -24,6 +34,19 @@ const AddEventScreen = () => {
     .required('La date de disponibilité du don est requis'), 
     description:''
   })
+
+  const debutDateChange=(event, selectedDate)=>{
+    const nextDate = selectedDate;
+    setShowDebutDatePicker(false);
+    setFieldValue('debut', nextDate);
+    debutInputRef.current.blur();
+  };
+  const finDateChange=(event, selectedDate)=>{
+    const nextDate = selectedDate;
+    setShowFinDatePicker(false);
+    setFieldValue('debut', nextDate);
+    finInputRef.current.blur();
+  };
 
   const {
     values,
@@ -63,22 +86,50 @@ const AddEventScreen = () => {
             </Heading>
           </Box>
 
-          <FormControl>
+          <FormControl isInvalid={touched.lieu && errors?.lieu}>
             <FormControl.Label>Lieu</FormControl.Label>
-            <Input placeholder="Indiquer le lieu"  onChangeText={handleChange('lieu')}/>
+            <Input placeholder="Indiquer le lieu" value={values.lieu} onChangeText={handleChange('lieu')}/>
+            <FormControl.ErrorMessage>{errors?.lieu}</FormControl.ErrorMessage>
           </FormControl>
-          <FormControl>
+          <FormControl isInvalid={touched.debut && errors?.debut}>
             <FormControl.Label>Début</FormControl.Label>
-            <Input placeholder="Préciser le début" />
+            <Input 
+                onFocus={()=>setShowDebutDatePicker(true)}
+                showSoftInputOnFocus={false}
+                ref={debutInputRef}
+                value={values.debut?.toISOString()} 
+                onChangeText={handleChange('debut')}
+                />
+                <FormControl.ErrorMessage>
+            {errors?.debut}
+          </FormControl.ErrorMessage>
           </FormControl>
-          
-          <FormControl>
-            <FormControl.Label>fin</FormControl.Label>
-            <Input placeholder="Préciser la fin" />
+          {showDebutDatePicker && DateTimePickerAndroid.open({
+            mode:'date',
+            value:new Date(),
+            onChange:debutDateChange,
+          })}
+          <FormControl isInvalid={touched.fin && errors?.fin}>
+            <FormControl.Label>Fin</FormControl.Label>
+            <Input 
+                onFocus={()=>setShowFinDatePicker(true)}
+                showSoftInputOnFocus={false}
+                ref={finInputRef}
+                value={values.fin?.toISOString()} 
+                onChangeText={handleChange('fin')}
+                />
+                <FormControl.ErrorMessage>
+            {errors?.fin}
+          </FormControl.ErrorMessage>
           </FormControl>
+          {showFinDatePicker && DateTimePickerAndroid.open({
+            mode:'date',
+            value:new Date(),
+            onChange:finDateChange,
+          })}
           <FormControl>
             <FormControl.Label>Description</FormControl.Label>
-            <Input placeholder="Décrire l'évenement" />
+            <Input placeholder="Décrire l'évenement"  value={values.description} onChangeText={handleChange('description')}/>
           </FormControl>
           <FormControl>
             <FormControl.Label>Photo</FormControl.Label>
