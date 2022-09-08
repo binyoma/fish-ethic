@@ -42,11 +42,15 @@ const validationSchema = yup.object({
   confirmPassword: yup
     .string()
     .oneOf([yup.ref('password'), null], 'Les mots de passe sont différents'),
-  firstname: yup.string().required('Le prénom est requis'),
-  lastname: yup.string().required('Le nom est requis'),
+  // firstname: yup.string().required('Le pseudo est requis'),
 });
 
+//import du theme
+import { useTheme } from 'native-base';
+
 export default function RegistrationScreen() {
+  //theme 
+  const theme = useTheme();
   // Récupération du props navigation de react navigation
   const navigation = useNavigation();
   // Toast de notification
@@ -57,9 +61,7 @@ export default function RegistrationScreen() {
       email: '',
       password: '',
       confirmPassword: '',
-      firstname: '',
-      lastname: '',
-      role: '',
+      // pseudo: '',
     },
     onSubmit: values => signIn(values),
     validationSchema,
@@ -97,12 +99,12 @@ export default function RegistrationScreen() {
       });
   };
   return (
-    <Center flex="1">
+    <Center flex="1" bgColor="warmGray.5">
       <ScrollView w="full">
         <Box w="95%" mx="auto" px="1">
           <Heading size="lg">Bienvenue !</Heading>
           <Text my={'1.5'} color="muted.500">
-            Pour commencer, créer un votre compte
+            Inscrivez-vous pour continuer
           </Text>
           <VStack space={2}>
             <FormControl isInvalid={touched.email && errors?.email}>
@@ -139,37 +141,19 @@ export default function RegistrationScreen() {
                 {errors?.confirmPassword}
               </FormControl.ErrorMessage>
             </FormControl>
-            <FormControl isInvalid={touched.firstname && errors?.firstname}>
+
+            {/* <FormControl isInvalid={touched.Pseudo && errors?.Pseudo}>
               <FormControl.Label>Prénom</FormControl.Label>
               <Input
-                value={values.firstname}
-                onChangeText={handleChange('firstname')}
+                value={values.Pseudo}
+                onChangeText={handleChange('Pseudo')}
               />
               <FormControl.ErrorMessage>
-                {errors?.firstname}
+                {errors?.Pseudo}
               </FormControl.ErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={touched.lastname && errors?.lastname}>
-              <FormControl.Label>Nom</FormControl.Label>
-              <Input
-                value={values.lastname}
-                onChangeText={handleChange('lastname')}
-              />
-              <FormControl.ErrorMessage>
-                {errors?.lastname}
-              </FormControl.ErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={touched.role && errors?.role}>
-              <FormControl.Label>Rôle</FormControl.Label>
-              <Select onValueChange={handleChange('role')}>
-                <Select.Item label="Je suis un donateur" value="donor" />
-                <Select.Item label="Je suis un collecteur" value="collector" />
-              </Select>
-              <FormControl.ErrorMessage>
-                {errors?.role}
-              </FormControl.ErrorMessage>
-            </FormControl>
-            <Button colorScheme="amber" onPress={handleSubmit}>
+            </FormControl> */}
+
+            <Button colorScheme="green" onPress={handleSubmit}>
               S'inscrire
             </Button>
           </VStack>
@@ -178,7 +162,7 @@ export default function RegistrationScreen() {
             <Link
               onPress={() => navigation.goBack()}
               _text={{
-                color: 'amber.500',
+                color: theme.colors.primary.green,
                 fontWeight: 'medium',
                 fontSize: 'sm',
               }}
@@ -188,7 +172,7 @@ export default function RegistrationScreen() {
           </HStack>
           <Box mt="2" mb="5" flexDirection="row">
             <TouchableOpacity>
-              <Text pl={'1.5'} color="primary.500"></Text>
+              <Text pl={'1.5'} color='${theme.colors.primary.green}'></Text>
             </TouchableOpacity>
           </Box>
         </Box>

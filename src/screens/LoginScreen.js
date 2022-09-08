@@ -11,7 +11,10 @@ import {
   Link,
   VStack,
   Text,
+  ScrollView,
 } from 'native-base';
+//import du theme
+import { useTheme } from 'native-base';
 
 // faire disparaitre les warnings
 LogBox.ignoreLogs([
@@ -53,6 +56,9 @@ import { LogBox } from 'react-native';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
+  //theme 
+  const theme = useTheme();
+
 
   const authenContext = useContext(AuthContext);
   const { setAuthenticated } = authenContext;
@@ -173,40 +179,56 @@ export default function LoginScreen() {
   // Affichage du popup demande activation touch id
   return (
     <Center flex={'1'} bgColor="warmGray.5">
-      <Box w={'90%'}>
-        <Heading mb="1.5" fontWeight={'semibold'}>
-          Connexion
-        </Heading>
-        <VStack space={'2'}>
-          <FormControl>
-            <FormControl.Label>Email</FormControl.Label>
-            <Input value={values.email} onChangeText={handleChange('email')} />
-          </FormControl>
-          <FormControl>
-            <FormControl.Label>Mot de passe</FormControl.Label>
-            <Input
-              value={values.password}
-              onChangeText={handleChange('password')}
-            />
-          </FormControl>
-          <Button onPress={handleSubmit} style={color = '#5bba6f'}>
-            Se connecter
-          </Button>
-          <HStack justifyContent={'center'} mt="3">
-            <Text>Pas encore membre ? </Text>
-            <Link
-              onPress={() => navigation.navigate('Registration')}
-              _text={{
-                color: '#5bba6f',
-                fontWeight: 'medium',
-                fontSize: 'sm',
-              }}
-            >
-              Créer un compte
-            </Link>
-          </HStack>
-        </VStack>
-      </Box>
+      <ScrollView w="full">
+        <Box w="95%" mx="auto" px="1">
+          <Heading size="lg">
+            Content de vous revoir
+          </Heading>
+          <Text my={'1.5'} color="muted.500">
+            Connecter-vous pour continuer
+          </Text>
+          <VStack space={'2'}>
+            <FormControl>
+              <FormControl.Label>Email</FormControl.Label>
+              <Input value={values.email} onChangeText={handleChange('email')} />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>Mot de passe</FormControl.Label>
+              <Input
+                value={values.password}
+                onChangeText={handleChange('password')}
+              />
+
+              <Link
+                onPress={() => navigation.navigate('')}
+                _text={{
+                  color: theme.colors.primary.green,
+                  fontWeight: 'medium',
+                  fontSize: 'sm',
+                }}
+              >
+                Mot de passe oublié?
+              </Link>
+            </FormControl>
+            <Button onPress={handleSubmit} colorScheme="green">
+              Se connecter
+            </Button>
+            <HStack justifyContent={'center'} mt="3">
+              <Text>Pas encore membre ? </Text>
+              <Link
+                onPress={() => navigation.navigate('Registration')}
+                _text={{
+                  color: theme.colors.primary.green,
+                  fontWeight: 'medium',
+                  fontSize: 'sm',
+                }}
+              >
+                Créer un compte
+              </Link>
+            </HStack>
+          </VStack>
+        </Box>
+      </ScrollView>
     </Center>
   );
 }

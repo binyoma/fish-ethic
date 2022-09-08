@@ -16,6 +16,12 @@ const config = {
 };
 
 const customTheme = extendTheme({
+  colors: {
+    primary: {
+      titreDarkmode: 'FFFFFF',
+      green: '#5bba6f'
+    }
+  },
   config,
   components: {
     Input: {
