@@ -21,7 +21,7 @@ export default function TabNavigation() {
 
           if (route.name === 'Home') {
             iconName = focused ? 'md-home' : 'md-home-outline';
-          }else if (route.name === 'Account') {
+          } else if (route.name === 'Account') {
             iconName = focused ? 'md-person' : 'md-person-outline';
           }
 
@@ -38,13 +38,14 @@ export default function TabNavigation() {
         tabBarLabelStyle: {
           paddingBottom: 2,
         },
-      })}>
+      })}
+    >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{title: 'Accueil'}}
       />
-    
+
       <Tab.Screen
         name="Account"
         component={StackNavigation}
