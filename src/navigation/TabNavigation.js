@@ -8,6 +8,7 @@ import HomeScreen from '../screens/HomeScreen';
 import {useTheme} from 'native-base';
 
 import StackNavigation from './StackNavigation';
+import AddEventScreen from '../screens/AddEventScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +24,9 @@ export default function TabNavigation() {
             iconName = focused ? 'md-home' : 'md-home-outline';
           }else if (route.name === 'Account') {
             iconName = focused ? 'md-person' : 'md-person-outline';
-          }
+          }else if (route.name === 'add') {
+          iconName = focused ? 'add-circle' : 'add-circle-outline';
+        }
 
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -43,6 +46,11 @@ export default function TabNavigation() {
         name="Home"
         component={HomeScreen}
         options={{title: 'Accueil'}}
+      />
+       <Tab.Screen
+        name="add"
+        component={AddEventScreen}
+        options={{title: 'Ajout'}}
       />
     
       <Tab.Screen
