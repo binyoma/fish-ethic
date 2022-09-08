@@ -47,16 +47,13 @@ export default function TabNavigation() {
         component={HomeScreen}
         options={{ title: 'Accueil' }}
       />
-<<<<<<< HEAD:src/navigation/TabNavigation.js
        <Tab.Screen
         name="add"
         component={AddEventScreen}
         options={{title: 'Ajout'}}
       />
     
-=======
 
->>>>>>> origin/DylanDev:src/navigations/TabNavigation.js
       <Tab.Screen
         name="Account"
         component={StackNavigation}

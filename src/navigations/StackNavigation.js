@@ -13,14 +13,14 @@ const StackNavigation = () => {
         name='account'
         component={AccountScreen}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name='login'
         component={LoginScreens}
       />
       <Stack.Screen
         name='signUp'
         component={SignUpScreens}
-      />
+      /> */}
     </Stack.Navigator>
   )
 }
