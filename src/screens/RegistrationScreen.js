@@ -153,7 +153,7 @@ export default function RegistrationScreen() {
               </FormControl.ErrorMessage>
             </FormControl> */}
 
-            <Button colorScheme="green" onPress={handleSubmit}>
+            <Button colorScheme='theme.color' onPress={handleSubmit}>
               S'inscrire
             </Button>
           </VStack>

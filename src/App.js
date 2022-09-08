@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/native';
 import RootNavigation from './navigations/RootNavigation';
 import { AuthContext } from './contexts/AuthContext';
-import messaging from '@react-native-firebase/messaging';
+// import messaging from '@react-native-firebase/messaging';
 
 // config du thème
 const config = {
@@ -39,13 +39,13 @@ export default function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const schema = useColorScheme();
 
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
+  // useEffect(() => {
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  //   });
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
   return (
     <NativeBaseProvider theme={customTheme}>
