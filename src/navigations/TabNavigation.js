@@ -7,7 +7,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../screens/HomeScreen';
 import { useTheme } from 'native-base';
 
-import StackNavigation from './StackNavigation';
+// import StackNavigation from './StackNavigation';
+import ResearchScreen from '../screens/ResearchScreen';
+import AddScreen from '../screens/AddScreen';
+import AccountScreen from '../screens/AccountScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,6 +24,10 @@ export default function TabNavigation() {
 
           if (route.name === 'Home') {
             iconName = focused ? 'md-home' : 'md-home-outline';
+          } else if (route.name === 'Research') {
+            iconName = focused ? 'md-pin' : 'md-pin-outline';
+          } else if (route.name === 'Add') {
+            iconName = focused ? 'md-add-circle' : 'md-add-circle-outline';
           } else if (route.name === 'Account') {
             iconName = focused ? 'md-person' : 'md-person-outline';
           }
@@ -44,12 +51,23 @@ export default function TabNavigation() {
         component={HomeScreen}
         options={{ title: 'Accueil' }}
       />
+      <Tab.Screen
+        name="Add"
+        component={AddScreen}
+        options={{ title: 'Ajouter' }}
+      />
+      <Tab.Screen
+        name="Research"
+        component={ResearchScreen}
+        options={{ title: 'Recherche' }}
+      />
 
       <Tab.Screen
         name="Account"
-        component={StackNavigation}
+        component={AccountScreen}
         options={{ title: 'Mon compte' }}
       />
+
     </Tab.Navigator>
   );
 }
