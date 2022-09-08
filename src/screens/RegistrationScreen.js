@@ -42,7 +42,7 @@ const validationSchema = yup.object({
   confirmPassword: yup
     .string()
     .oneOf([yup.ref('password'), null], 'Les mots de passe sont différents'),
-  // firstname: yup.string().required('Le pseudo est requis'),
+  // pseudo: yup.string().required('Le pseudo est requis'),
 });
 
 //import du theme
@@ -78,24 +78,30 @@ export default function RegistrationScreen() {
       .then(userCredential => {
         const user = userCredential.user;
         const id = user.uid;
-        delete values.password;
-        delete values.confirmPassword;
+        toast.show({
+          description: 'Compte créé avec succès !',
+        }); console.log('Compte créé avec succès !')
+        navigation.goBack();
 
-        firestore()
-          .collection('users')
-          .doc(id)
-          .set({
-            ...values,
-            createdAt: firestore.FieldValue.serverTimestamp(),
-          })
-          .then(userCredential => {
-            toast.show({
-              description: 'Compte créé avec succès !',
-            });
-          })
-          .catch(error => {
-            console.log(error.message);
-          });
+        //pas de creation de profil dans l'inscription
+        // delete values.password;
+        // delete values.confirmPassword;
+
+        // firestore()
+        //   .collection('users')
+        //   .doc(id)
+        //   .set({
+        //     ...values,
+        //     createdAt: firestore.FieldValue.serverTimestamp(),
+        //   })
+        //   .then(userCredential => {
+        //     toast.show({
+        //       description: 'Compte créé avec succès !',
+        //     });
+        //   })
+        //   .catch(error => {
+        //     console.log(error.message);
+        //   });
       });
   };
   return (
@@ -122,6 +128,7 @@ export default function RegistrationScreen() {
               <Input
                 value={values.password}
                 onChangeText={handleChange('password')}
+                type="password"
               />
               <FormControl.ErrorMessage>
                 {errors?.password}
@@ -134,6 +141,7 @@ export default function RegistrationScreen() {
                 Confirmation du mot de passe
               </FormControl.Label>
               <Input
+                type="password"
                 value={values.confirmPassword}
                 onChangeText={handleChange('confirmPassword')}
               />
@@ -153,7 +161,7 @@ export default function RegistrationScreen() {
               </FormControl.ErrorMessage>
             </FormControl> */}
 
-            <Button colorScheme='theme.color' onPress={handleSubmit}>
+            <Button colorScheme='green' onPress={handleSubmit}>
               S'inscrire
             </Button>
           </VStack>

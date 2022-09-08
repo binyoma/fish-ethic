@@ -58,6 +58,7 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   //theme 
   const theme = useTheme();
+  console.log(navigation);
 
 
   const authenContext = useContext(AuthContext);
@@ -195,12 +196,24 @@ export default function LoginScreen() {
             <FormControl>
               <FormControl.Label>Mot de passe</FormControl.Label>
               <Input
+                type="password"
                 value={values.password}
                 onChangeText={handleChange('password')}
               />
 
               <Link
-                onPress={() => navigation.navigate('')}
+                onPress={() => {
+                  auth().sendPasswordResetEmail(values.email)
+                    .then(() => {
+                      console.log('Password reset email sent!');
+                    })
+                    .catch((error) => {
+                      var errorCode = error.code;
+                      var errorMessage = error.message;
+                      console.log(errorCode);
+                      console.log(errorMessage);
+                    });
+                }}
                 _text={{
                   color: theme.colors.primary.green,
                   fontWeight: 'medium',
