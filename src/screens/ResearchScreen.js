@@ -1,11 +1,10 @@
 import {View, Text} from 'react-native';
 import React, {useState} from 'react';
 import {Input, VStack, Box, Icon, HStack, Select, CheckIcon} from 'native-base';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const SearchScreen = () => {
-  const [searchBy, setSearchBy] = useState('');
+const ResearchScreen = () => {
+    const [searchBy, setSearchBy] = useState('');
   return (
     <Box
       _dark={{
@@ -54,4 +53,4 @@ const SearchScreen = () => {
   );
 };
 
-export default SearchScreen;
+export default ResearchScreen

@@ -7,9 +7,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../screens/HomeScreen';
 import {useTheme} from 'native-base';
 
-import StackNavigation from './StackNavigation';
-import AddEventScreen from '../screens/AddEventScreen';
-import SearchScreen from '../screens/SearchScreen';
+// import StackNavigation from './StackNavigation';
+import ResearchScreen from '../screens/ResearchScreen';
+import AddScreen from '../screens/AddScreen';
+import StackNavigation from '../navigations/StackNavigation'
+import AddEventScreen from '../screens/AddEventScreen'
 
 const Tab = createBottomTabNavigator();
 
@@ -23,12 +25,14 @@ export default function TabNavigation() {
 
           if (route.name === 'Home') {
             iconName = focused ? 'md-home' : 'md-home-outline';
+          } else if (route.name === 'Research') {
+            iconName = focused ? 'md-pin' : 'md-pin-outline';
+          } else if (route.name === 'Add') {
+            iconName = focused ? 'md-add-circle' : 'md-add-circle-outline';
           } else if (route.name === 'Account') {
             iconName = focused ? 'md-person' : 'md-person-outline';
           } else if (route.name === 'add') {
             iconName = focused ? 'add-circle' : 'add-circle-outline';
-          }else if (route.name === 'search') {
-            iconName = focused ? 'search-circle' : 'search';
           }
 
           // You can return any component that you like here!
@@ -50,15 +54,16 @@ export default function TabNavigation() {
         component={HomeScreen}
         options={{title: 'Accueil'}}
       />
+      
       <Tab.Screen
-        name="add"
+        name="Add"
         component={AddEventScreen}
-        options={{title: 'Ajout'}}
+        options={{ title: 'Ajouter' }}
       />
       <Tab.Screen
-        name="search"
-        component={SearchScreen}
-        options={{title: 'recherche'}}
+        name="Research"
+        component={ResearchScreen}
+        options={{ title: 'Recherche' }}
       />
 
       <Tab.Screen
@@ -66,6 +71,7 @@ export default function TabNavigation() {
         component={StackNavigation}
         options={{title: 'Mon compte'}}
       />
+
     </Tab.Navigator>
   );
 }

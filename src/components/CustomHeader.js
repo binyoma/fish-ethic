@@ -5,7 +5,7 @@ import { color } from 'react-native-reanimated';
 
 export default function CustomHeader() {
   return (
-    <Box >
+    <Box bg="primary.green">
 
     </Box>
   );
