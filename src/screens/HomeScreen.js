@@ -3,15 +3,16 @@ import Card from '../components/Card';
 import {Avatar, Box, Center, HStack, Stack, Text} from 'native-base';
 import {useTheme} from 'native-base';
 import {ScrollView} from 'react-native';
+
 const HomeScreen = () => {
   //theme
   const theme = useTheme();
   return (
     <ScrollView>
-      <Box bg="primary.darkGrey">
+      <Box bgColor="warmGray.5">
         <Box>
           <Center>
-            <Text color="muted.50">LES DERNIERES SORTIES</Text>
+            <Text>LES DERNIERES SORTIES</Text>
           </Center>
           <ScrollView horizontal={true}>
             <Stack direction="row" space="3" mt="5">
@@ -22,7 +23,7 @@ const HomeScreen = () => {
           </ScrollView>
         </Box>
         <Center mt="5">
-          <Text color="muted.50">BIENVENUE A NOS NOUVEAUX MEMBRES</Text>
+          <Text>BIENVENUE A NOS NOUVEAUX MEMBRES</Text>
         </Center>
         <ScrollView horizontal={true}>
           <HStack space={2} mt="5">
@@ -110,7 +111,7 @@ const HomeScreen = () => {
         </ScrollView>
         <Box mt="5">
           <Center>
-            <Text color="muted.50">LES SORTIES A VENIR</Text>
+            <Text>LES SORTIES A VENIR</Text>
           </Center>
           <ScrollView horizontal={true}>
             <Stack direction="row" space="3" mt="5">
