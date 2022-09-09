@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import {
   Text,
@@ -48,7 +48,7 @@ const Card = () => {
             </Heading>
             <Text
               fontSize="xs"
-              _light={{color: 'muted.50'}}
+              _light={{ color: 'muted.50' }}
               fontWeight="500"
               ml="-0.5"
               mt="-1"
@@ -56,7 +56,7 @@ const Card = () => {
               The Silicon Valley of India.
             </Text>
           </Stack>
-          <Text fontWeight="400" _light={{color: 'muted.50'}}>
+          <Text fontWeight="400" _light={{ color: 'muted.50' }}>
             Bengaluru (also called Bangalore) is the center of India's high-tech
             industry. The city is also known for its parks and nightlife.
           </Text>

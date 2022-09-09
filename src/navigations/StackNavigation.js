@@ -2,8 +2,6 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import AccountScreen from '../screens/AccountScreen'
-// import LoginScreens from '../screens/LoginScreens'
-// import SignUpScreens from '../screens/SignUpScreens'
 
 const Stack = createNativeStackNavigator()
 const StackNavigation = () => {

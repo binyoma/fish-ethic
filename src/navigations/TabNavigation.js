@@ -12,6 +12,8 @@ import ResearchScreen from '../screens/ResearchScreen';
 import StackNavigation from '../navigations/StackNavigation'
 import AddEventScreen from '../screens/AddEventScreen'
 
+import StackNavigationAccount from '../navigations/StackNavigationAccount';
+
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigation() {
@@ -67,8 +69,8 @@ export default function TabNavigation() {
 
       <Tab.Screen
         name="Account"
-        component={StackNavigation}
-        options={{title: 'Mon compte'}}
+        component={StackNavigationAccount}
+        options={{ title: 'Mon compte' }}
       />
 
     </Tab.Navigator>
