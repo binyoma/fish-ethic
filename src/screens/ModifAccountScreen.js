@@ -13,6 +13,7 @@ import {
     Text,
     ScrollView,
     Select,
+    useToast,
 } from 'native-base';
 //import du theme
 import { useTheme } from 'native-base';
@@ -40,9 +41,11 @@ const validationSchema = yup.object({
 ///////////////////////////////////////
 const ModifAccountScreen = () => {
     ////////////////////////////////////////
+    //toast
+    const toast = useToast();
     //piker
-    const [level, setLevel] = React.useState('DÉBUTANT/NOVICE');
-    const [fishing_techniques, setFishing_techniques] = React.useState('LA PÊCHE AU TOC');
+    const [level, setLevel] = React.useState();
+    const [fishing_techniques, setFishing_techniques] = React.useState();
 
     //theme 
     const theme = useTheme();
@@ -66,6 +69,10 @@ const ModifAccountScreen = () => {
         values.level = level;
         values.fishing_techniques = fishing_techniques;
         //ici envoi de données
+        toast.show({
+            title: 'Modification(s) effectuée(s)',
+            placement: 'bottom',
+        });
         console.log(values);
         //////////////////////
     };
@@ -73,7 +80,7 @@ const ModifAccountScreen = () => {
         <Center flex="1" bgColor="warmGray.5">
             <ScrollView w="full">
                 <Box w="95%" mx="auto" px="1">
-                    <Heading size="lg"> Modifiez votre profil</Heading>
+                    <Heading size="lg" mt="5"> Modifiez votre profil</Heading>
                     {/* nom */}
                     <VStack space={2}>
                         <FormControl isInvalid={touched.name && errors?.name}>
@@ -134,7 +141,7 @@ const ModifAccountScreen = () => {
                         <Select
                             mt="2"
                             mb="5"
-                            placeholder="techniques de péche"
+                            placeholder="Techniques de péche"
                             selectedValue={fishing_techniques}
                             onValueChange={(itemValue) => setFishing_techniques(itemValue)}
                         >
