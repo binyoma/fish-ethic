@@ -9,7 +9,6 @@ import {useTheme} from 'native-base';
 
 // import StackNavigation from './StackNavigation';
 import ResearchScreen from '../screens/ResearchScreen';
-import AddScreen from '../screens/AddScreen';
 import StackNavigation from '../navigations/StackNavigation'
 import AddEventScreen from '../screens/AddEventScreen'
 
