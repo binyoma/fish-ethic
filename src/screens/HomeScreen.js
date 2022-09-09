@@ -11,7 +11,7 @@ const HomeScreen = () => {
     <ScrollView>
       <Box bgColor="warmGray.5">
         <Box>
-          <Center>
+          <Center mt="3">
             <Text>LES DERNIERES SORTIES</Text>
           </Center>
           <ScrollView horizontal={true}>

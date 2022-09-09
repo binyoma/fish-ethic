@@ -1,16 +1,18 @@
 import React from 'react';
 // react-navigation stack
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // react-native-vector-icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Mes écrans
 import HomeScreen from '../screens/HomeScreen';
-import { useTheme } from 'native-base';
+import {useTheme} from 'native-base';
 
 // import StackNavigation from './StackNavigation';
 import ResearchScreen from '../screens/ResearchScreen';
 import AddScreen from '../screens/AddScreen';
 import AccountScreen from '../screens/AccountScreen';
+
+import CustomHeader from '../components/CustomHeader';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,8 +20,8 @@ export default function TabNavigation() {
   const theme = useTheme();
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
           let iconName;
 
           if (route.name === 'Home') {
@@ -37,7 +39,6 @@ export default function TabNavigation() {
         },
         tabBarActiveTintColor: theme.colors.primary.green,
         tabBarInactiveTintColor: 'gray',
-        headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarStyle: {
           paddingTop: 2,
@@ -45,29 +46,29 @@ export default function TabNavigation() {
         tabBarLabelStyle: {
           paddingBottom: 2,
         },
-      })}>
+      })}
+    >
       <Tab.Screen
+        options={{header: () => <CustomHeader />, headerStyle: {height: 200}}}
         name="Home"
         component={HomeScreen}
-        options={{ title: 'Accueil' }}
       />
       <Tab.Screen
         name="Add"
         component={AddScreen}
-        options={{ title: 'Ajouter' }}
+        options={{title: 'Ajouter'}}
       />
       <Tab.Screen
         name="Research"
         component={ResearchScreen}
-        options={{ title: 'Recherche' }}
+        options={{title: 'Recherche'}}
       />
 
       <Tab.Screen
         name="Account"
         component={AccountScreen}
-        options={{ title: 'Mon compte' }}
+        options={{title: 'Mon compte'}}
       />
-
     </Tab.Navigator>
   );
 }
