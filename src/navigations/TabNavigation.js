@@ -10,7 +10,7 @@ import { useTheme } from 'native-base';
 // import StackNavigation from './StackNavigation';
 import ResearchScreen from '../screens/ResearchScreen';
 import AddScreen from '../screens/AddScreen';
-import AccountScreen from '../screens/AccountScreen';
+import StackNavigationAccount from '../navigations/StackNavigationAccount';
 
 const Tab = createBottomTabNavigator();
 
@@ -64,7 +64,7 @@ export default function TabNavigation() {
 
       <Tab.Screen
         name="Account"
-        component={AccountScreen}
+        component={StackNavigationAccount}
         options={{ title: 'Mon compte' }}
       />
 

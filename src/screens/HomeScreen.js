@@ -1,8 +1,8 @@
 import React from 'react';
 import Card from '../components/Card';
-import {Avatar, Box, Center, HStack, Stack, Text} from 'native-base';
-import {useTheme} from 'native-base';
-import {ScrollView} from 'react-native';
+import { Avatar, Box, Center, HStack, Stack, Text } from 'native-base';
+import { useTheme } from 'native-base';
+import { ScrollView } from 'react-native';
 const HomeScreen = () => {
   //theme
   const theme = useTheme();
