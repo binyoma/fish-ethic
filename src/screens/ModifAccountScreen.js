@@ -23,28 +23,32 @@ import { useNavigation } from '@react-navigation/native';
 // formik
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+
 const validationSchema = yup.object({
+    name: yup
+        .string(),
+    firstname: yup
+        .string(),
+    pseudo: yup
+        .string(),
     email: yup
         .string()
         .email('Merci une adresse mail valide')
         .required("L'email est requis"),
-    password: yup
-        .string()
-        .min(6, 'mot de passe trop court')
-        .required('Le mot de passe est requis'),
-    confirmPassword: yup
-        .string()
-        .oneOf([yup.ref('password'), null], 'Les mots de passe sont différents'),
-    // pseudo: yup.string().required('Le pseudo est requis'),
 });
 
 ///////////////////////////////////////
 const ModifAccountScreen = () => {
     ////////////////////////////////////////
+    //piker
+    const [level, setLevel] = React.useState('DÉBUTANT/NOVICE');
+    const [fishing_techniques, setFishing_techniques] = React.useState('LA PÊCHE AU TOC');
+
     //theme 
     const theme = useTheme();
     // Récupération du props navigation de react navigation
     const navigation = useNavigation();
+
     // Récupération des props useFormik
     const { values, handleChange, handleSubmit, errors, touched } = useFormik({
         initialValues: {
@@ -52,12 +56,19 @@ const ModifAccountScreen = () => {
             firstname: '',
             pseudo: '',
             email: '',
-            level: '',
-            fishing_techniques: '',
+            // level: '',
+            // fishing_techniques: '',
         },
-        onSubmit: values => signIn(values),
+        onSubmit: values => modif(values),
         validationSchema,
     });
+    const modif = values => {
+        values.level = level;
+        values.fishing_techniques = fishing_techniques;
+        //ici envoi de données
+        console.log(values);
+        //////////////////////
+    };
     return (
         <Center flex="1" bgColor="warmGray.5">
             <ScrollView w="full">
@@ -108,27 +119,33 @@ const ModifAccountScreen = () => {
                                 {errors?.email}
                             </FormControl.ErrorMessage>
                         </FormControl>
-
-
+                        <Select
+                            mt="2"
+                            placeholder="Niveau"
+                            selectedValue={level}
+                            onValueChange={(itemValue) => setLevel(itemValue)}
+                        >
+                            <Select.Item label="DÉBUTANT/NOVICE" value="DÉBUTANT/NOVICE" />
+                            <Select.Item label="AMATEUR" value="AMATEUR" />
+                            <Select.Item label="INTERMÉDIAIRE" value="INTERMÉDIAIRE" />
+                            <Select.Item label="CONFIRMÉ" value="CONFIRMÉ" />
+                            <Select.Item label="EXPERT" value="EXPERT" />
+                        </Select>
+                        <Select
+                            mt="2"
+                            mb="5"
+                            placeholder="techniques de péche"
+                            selectedValue={fishing_techniques}
+                            onValueChange={(itemValue) => setFishing_techniques(itemValue)}
+                        >
+                            <Select.Item label="LA PÊCHE AU TOC" value="LA PÊCHE AU TOC" />
+                            <Select.Item label="LA PÊCHE AUX LEURRES" value="LA PÊCHE AUX LEURRES" />
+                            <Select.Item label="LA PÊCHE À LA MOUCHE" value="LA PÊCHE À LA MOUCHE" />
+                        </Select>
                         <Button colorScheme='green' onPress={handleSubmit}>
-                            S'inscrire
+                            ENREGISTRER
                         </Button>
                     </VStack>
-                    <HStack mt="2" space="1.5">
-                        <Text>Déjà inscrit ? </Text>
-                        <Link
-                            onPress={() => navigation.goBack()}
-                            _text={{
-                                color: theme.colors.primary.green,
-                                fontWeight: 'medium',
-                                fontSize: 'sm',
-                            }}
-                        >
-                            Se connecter
-                        </Link>
-                    </HStack>
-                    <Box mt="2" mb="5" flexDirection="row">
-                    </Box>
                 </Box>
             </ScrollView>
         </Center>
