@@ -47,6 +47,8 @@ export default function TabNavigation() {
         tabBarLabelStyle: {
           paddingBottom: 2,
         },
+        header: () => <CustomHeader />,
+        headerStyle: {height: 200},
       })}
     >
       <Tab.Screen
