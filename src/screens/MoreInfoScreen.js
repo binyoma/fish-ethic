@@ -14,7 +14,11 @@ import {
   IconButton,
 } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-const MoreInfoScreen = () => {
+import dayjs from 'dayjs';
+import 'dayjs/locale/fr';
+const MoreInfoScreen = props => {
+  const item = props.route.params;
+
   const theme = useTheme();
   return (
     <ScrollView>
@@ -47,8 +51,7 @@ const MoreInfoScreen = () => {
           </TouchableOpacity>
         </HStack>
         <Stack mt="4">
-          <Heading>Titre de la sortie</Heading>
-
+          <Heading>{item.props.title}</Heading>
           <HStack
             bg={theme.colors.primary.green}
             mt="5"
@@ -59,17 +62,26 @@ const MoreInfoScreen = () => {
             <Text>Heure</Text>
             <Text>Lieu</Text>
           </HStack>
+          <HStack
+            bg={theme.colors.primary.green}
+            mt="5"
+            mb="5"
+            justifyContent="space-around"
+          >
+            <Text>
+              Du{' '}
+              {item?.props?.dateDebut &&
+                dayjs(item.props.dateDebut?.toDate()).format('DD/MM/YYYY')}{' '}
+              au{' '}
+              {item?.props?.dateFin &&
+                dayjs(item.props.dateFin?.toDate()).format('DD/MM/YYYY')}
+            </Text>
+            <Text>De </Text>
+            <Text>{item?.props?.lieu}</Text>
+          </HStack>
 
-          <Text>Description:</Text>
-          <Text>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </Text>
+          <Text>Description: {item.props.description}</Text>
+
           <Button mt="5" bg={theme.colors.primary.green}>
             S'INSCRIRE
           </Button>

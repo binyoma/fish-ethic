@@ -9,9 +9,11 @@ import {useTheme} from 'native-base';
 
 // import StackNavigation from './StackNavigation';
 import ResearchScreen from '../screens/ResearchScreen';
-import AddEventScreen from '../screens/AddEventScreen'
+import AddEventScreen from '../screens/AddEventScreen';
 
 import StackNavigationAccount from '../navigations/StackNavigationAccount';
+
+import CustomHeader from '../components/CustomHeader';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,8 +33,6 @@ export default function TabNavigation() {
             iconName = focused ? 'md-add-circle' : 'md-add-circle-outline';
           } else if (route.name === 'Account') {
             iconName = focused ? 'md-person' : 'md-person-outline';
-          } else if (route.name === 'add') {
-            iconName = focused ? 'add-circle' : 'add-circle-outline';
           }
 
           // You can return any component that you like here!
@@ -40,7 +40,6 @@ export default function TabNavigation() {
         },
         tabBarActiveTintColor: theme.colors.primary.green,
         tabBarInactiveTintColor: 'gray',
-        headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarStyle: {
           paddingTop: 2,
@@ -48,30 +47,30 @@ export default function TabNavigation() {
         tabBarLabelStyle: {
           paddingBottom: 2,
         },
-      })}>
+      })}
+    >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{title: 'Accueil'}}
       />
-      
+
       <Tab.Screen
         name="Add"
         component={AddEventScreen}
-        options={{ title: 'Ajouter' }}
+        options={{title: 'Ajouter'}}
       />
       <Tab.Screen
         name="Research"
         component={ResearchScreen}
-        options={{ title: 'Recherche' }}
+        options={{title: 'Recherche'}}
       />
 
       <Tab.Screen
         name="Account"
         component={StackNavigationAccount}
-        options={{ title: 'Mon compte' }}
+        options={{title: 'Mon compte'}}
       />
-
     </Tab.Navigator>
   );
 }

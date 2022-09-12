@@ -1,12 +1,128 @@
+import {View, TouchableOpacity} from 'react-native';
 import React from 'react';
-import { Box, Image } from 'native-base';
-import { StyleSheet } from 'react-native';
-import { color } from 'react-native-reanimated';
 
-export default function CustomHeader() {
-  return (
-    <Box bg="primary.green">
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  Avatar,
+  Box,
+  Center,
+  Heading,
+  HStack,
+  Icon,
+  Image,
+  Input,
+  Text,
+  useColorModeValue,
+  useTheme,
+} from 'native-base';
 
+const CustomHeader = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
+  const theme = useTheme();
+
+  return route.name == 'Home' ? (
+    <Box>
+      <HStack justifyContent="center">
+        <Avatar
+          mt="4"
+          mr="2"
+          size="md"
+          bg={useColorModeValue('white', 'black')}
+          source={require('../assets/SAUVA2.png')}
+        ></Avatar>
+
+        <Center h="20">
+          <Heading>FISHETHIC</Heading>
+        </Center>
+      </HStack>
+
+      <Input
+        placeholder="Search"
+        width="100%"
+        borderRadius="4"
+        py="3"
+        px="1"
+        fontSize="16"
+        InputLeftElement={
+          <Icon m="2" ml="3" size="6" as={<Ionicons name="search" />} />
+        }
+      />
     </Box>
-  );
-}
+  ) : route.name == 'Account' ? (
+    <Box>
+      <HStack bg={useColorModeValue(theme.colors.primary.green, 'black')} p="4">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" color="white" size={30} />
+        </TouchableOpacity>
+        <Center ml="2">
+          <Text color="white" fontSize="20">
+            VOTRE PROFIL
+          </Text>
+        </Center>
+      </HStack>
+      <Input
+        placeholder="Search"
+        width="100%"
+        borderRadius="4"
+        py="3"
+        px="1"
+        fontSize="14"
+        InputLeftElement={
+          <Icon m="2" ml="3" size="6" as={<Ionicons name="search" />} />
+        }
+      />
+    </Box>
+  ) : route.name == 'Research' ? (
+    <Box>
+      <HStack bg={useColorModeValue(theme.colors.primary.green, 'black')} p="4">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" color="white" size={30} />
+        </TouchableOpacity>
+        <Center ml="2">
+          <Text color="white" fontSize="20">
+            RECHERCHE
+          </Text>
+        </Center>
+      </HStack>
+      <Input
+        placeholder="Search"
+        width="100%"
+        borderRadius="4"
+        py="3"
+        px="1"
+        fontSize="14"
+        InputLeftElement={
+          <Icon m="2" ml="3" size="6" as={<Ionicons name="search" />} />
+        }
+      />
+    </Box>
+  ) : route.name == 'Add' ? (
+    <Box>
+      <HStack bg={useColorModeValue(theme.colors.primary.green, 'black')} p="4">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" color="white" size={30} />
+        </TouchableOpacity>
+        <Center ml="2">
+          <Text color="white" fontSize="20">
+            AJOUTER
+          </Text>
+        </Center>
+      </HStack>
+      <Input
+        placeholder="Search"
+        width="100%"
+        borderRadius="4"
+        py="3"
+        px="1"
+        fontSize="14"
+        InputLeftElement={
+          <Icon m="2" ml="3" size="6" as={<Ionicons name="search" />} />
+        }
+      />
+    </Box>
+  ) : null;
+};
+
+export default CustomHeader;
