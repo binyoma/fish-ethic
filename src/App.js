@@ -6,7 +6,7 @@ import {
   DarkTheme,
   DefaultTheme,
 } from '@react-navigation/native';
-import RootNavigation from './navigations/RootNavigation'
+import RootNavigation from './navigations/RootNavigation';
 import {AuthContext} from './contexts/AuthContext';
 // import messaging from '@react-native-firebase/messaging';
 

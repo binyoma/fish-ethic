@@ -12,6 +12,7 @@ import {
   VStack,
   Text,
   ScrollView,
+  useToast,
 } from 'native-base';
 //import du theme
 import {useTheme} from 'native-base';
@@ -207,12 +208,15 @@ export default function LoginScreen() {
                     .sendPasswordResetEmail(values.email)
                     .then(() => {
                       console.log('Password reset email sent!');
+                      toast.show({
+                        title: 'un mail de recupération vous a été envoyé',
+                        placement: 'bottom',
+                      });
                     })
                     .catch(error => {
                       var errorCode = error.code;
                       var errorMessage = error.message;
-                      console.log(errorCode);
-                      console.log(errorMessage);
+
                     });
                 }}
                 _text={{

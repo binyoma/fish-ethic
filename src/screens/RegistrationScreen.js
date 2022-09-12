@@ -78,6 +78,8 @@ export default function RegistrationScreen() {
       .then(userCredential => {
         const user = userCredential.user;
         const id = user.uid;
+        delete values.password;
+        delete values.confirmPassword;
         toast.show({
           description: 'Compte créé avec succès !',
         }); console.log('Compte créé avec succès !')
@@ -87,21 +89,21 @@ export default function RegistrationScreen() {
         // delete values.password;
         // delete values.confirmPassword;
 
-        // firestore()
-        //   .collection('users')
-        //   .doc(id)
-        //   .set({
-        //     ...values,
-        //     createdAt: firestore.FieldValue.serverTimestamp(),
-        //   })
-        //   .then(userCredential => {
-        //     toast.show({
-        //       description: 'Compte créé avec succès !',
-        //     });
-        //   })
-        //   .catch(error => {
-        //     console.log(error.message);
-        //   });
+        firestore()
+          .collection('users')
+          .doc(id)
+          .set({
+            ...values,
+            createdAt: firestore.FieldValue.serverTimestamp(),
+          })
+          .then(userCredential => {
+            toast.show({
+              description: 'Compte créé avec succès !',
+            });
+          })
+          .catch(error => {
+            console.log(error.message);
+          });
       });
   };
   return (
