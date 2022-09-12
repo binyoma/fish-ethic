@@ -1,10 +1,40 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Card from '../components/Card';
-import {Avatar, Box, Center, HStack, Stack, Text} from 'native-base';
+import {Avatar, Box, Center, FlatList, HStack, Stack, Text} from 'native-base';
 import {useTheme} from 'native-base';
 import {ScrollView} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 const HomeScreen = () => {
+  const [events, setEvents] = useState();
+  const [loading, setLoading] = useState();
+
+  // affichage de tous les évènements
+  useEffect(() => {
+    const allEvents = firestore()
+      .collection('events')
+      .onSnapshot(
+        querySnapShot => {
+          const eventsArray = [];
+          querySnapShot.forEach(doc => {
+            eventsArray.push({
+              ...doc.data(),
+              id: doc.id,
+            });
+          });
+          setEvents(eventsArray);
+          setLoading(false);
+        },
+        error => {
+          console.log(error.message);
+        },
+      );
+    return () => allEvents();
+  }, []);
+
+  const renderItem = ({item}) => <Card props={item} />;
+
   //theme
   const theme = useTheme();
   return (
@@ -14,13 +44,18 @@ const HomeScreen = () => {
           <Center mt="3">
             <Text>LES DERNIERES SORTIES</Text>
           </Center>
-          <ScrollView horizontal={true}>
-            <Stack direction="row" space="3" mt="5">
-              <Card />
-              <Card />
-              <Card />
-            </Stack>
-          </ScrollView>
+
+          <Stack direction="row" space="3" mt="5">
+            <FlatList
+              horizontal={true}
+              data={events}
+              keyExtractor={item => item.id}
+              renderItem={renderItem}
+              ListEmptyComponent={() => (
+                <Text my="5">Aucun don n'est trouvé !</Text>
+              )}
+            />
+          </Stack>
         </Box>
         <Center mt="5">
           <Text>BIENVENUE A NOS NOUVEAUX MEMBRES</Text>
@@ -113,13 +148,15 @@ const HomeScreen = () => {
           <Center>
             <Text>LES SORTIES A VENIR</Text>
           </Center>
-          <ScrollView horizontal={true}>
-            <Stack direction="row" space="3" mt="5">
-              <Card />
-              <Card />
-              <Card />
-            </Stack>
-          </ScrollView>
+
+          <Stack direction="row" space="3" mt="5">
+            <FlatList
+              horizontal={true}
+              data={events}
+              keyExtractor={item => item.id}
+              renderItem={renderItem}
+            />
+          </Stack>
         </Box>
       </Box>
     </ScrollView>

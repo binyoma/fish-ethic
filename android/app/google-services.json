@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "980986374228",
+    "project_id": "fish-ethic-20190",
+    "storage_bucket": "fish-ethic-20190.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:980986374228:android:bfb53c442ec75a016e65c1",
+        "android_client_info": {
+          "package_name": "com.fishethic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "980986374228-49d3l6htq1j8umqtmppm9fi55j8n03r1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPvhSRwAA6IFJGYe8nwwrDBuQngb40pLQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "980986374228-49d3l6htq1j8umqtmppm9fi55j8n03r1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

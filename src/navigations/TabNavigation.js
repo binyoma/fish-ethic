@@ -46,29 +46,19 @@ export default function TabNavigation() {
         tabBarLabelStyle: {
           paddingBottom: 2,
         },
+        header: () => <CustomHeader />,
+        headerStyle: {height: 200},
       })}
     >
-      <Tab.Screen
-        options={{header: () => <CustomHeader />, headerStyle: {height: 200}}}
-        name="Home"
-        component={HomeScreen}
-      />
-      <Tab.Screen
-        name="Add"
-        component={AddScreen}
-        options={{title: 'Ajouter'}}
-      />
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Add" component={AddScreen} />
       <Tab.Screen
         name="Research"
         component={ResearchScreen}
         options={{title: 'Recherche'}}
       />
 
-      <Tab.Screen
-        name="Account"
-        component={AccountScreen}
-        options={{title: 'Mon compte'}}
-      />
+      <Tab.Screen name="Account" component={AccountScreen} />
     </Tab.Navigator>
   );
 }

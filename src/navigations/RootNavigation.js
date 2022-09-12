@@ -11,6 +11,7 @@ import {AuthContext} from '../contexts/AuthContext';
 import CustomHeader from '../components/CustomHeader';
 
 import MoreInfoScreen from '../screens/MoreInfoScreen';
+import HomeScreen from '../screens/HomeScreen';
 // react-navigation
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,17 @@ export default function RootNavigation() {
       </Stack.Group>
     </Stack.Navigator>
   ) : (
-    <TabNavigation />
+    <Stack.Navigator>
+      <Stack.Group>
+        <Stack.Screen name="Welcome" component={TabNavigation} />
+        <Stack.Screen
+          name="MoreInfo"
+          component={MoreInfoScreen}
+          options={{
+            headerTitle: props => <CustomHeader {...props} />,
+          }}
+        />
+      </Stack.Group>
+    </Stack.Navigator>
   );
 }
