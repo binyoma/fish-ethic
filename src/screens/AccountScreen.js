@@ -1,3 +1,4 @@
+import { ActivityIndicator } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 // NATIVE BASE
 import {
@@ -16,9 +17,23 @@ import {
   Stack,
   theme,
   Pressable,
+  useTheme,
+  Divider,
+  useToast,
+  FlatList,
 } from 'native-base';
-//import du theme
-import { useTheme, Divider } from 'native-base';
+/************************************************
+ * Firebase
+ ***********************************************/
+// firebase firestore
+import firestore from '@react-native-firebase/firestore';
+// firebase auth
+import auth from '@react-native-firebase/auth';
+
+/************************************************
+ * Firebase
+ ***********************************************/
+
 // react-native-vector-icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
@@ -26,10 +41,75 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import Card from '../components/Card';
 // Hook React navigation pour accéder au context de la react-navigation
 import { useNavigation } from '@react-navigation/native';
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 
 const AccountScreen = () => {
-  const navigation = useNavigation();
 
+  // toast de notification
+  const toast = useToast();
+
+
+  ///////////////////////////////////////////////////////////////////////
+  const [initialValues, setInitialValues] = useState({});
+  useEffect(() => {
+    const id = auth().currentUser.uid;
+    firestore()
+      .collection('users')
+      .doc(id)
+      .get()
+      .then(docSnap => {
+        const data = docSnap.data();
+        setInitialValues({
+          firstname: data['firstname'],
+          name: data['name'],
+          image: data['image'],
+          level: data['level'],
+          fishing_techniques: data['fishing_techniques'],
+          email: data['email'],
+        });
+      });
+  }, []);
+  ///////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////
+  const [events, setevents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const user_id = auth().currentUser.uid;
+
+    const subscriber = firestore()
+      .collection('events')
+      .where('user_id', '==', user_id)
+      .onSnapshot(
+        querySnapshot => {
+          const eventsArray = [];
+          querySnapshot.forEach(doc => {
+            eventsArray.push({
+              ...doc.data(),
+              id: doc.id,
+            });
+          });
+          setevents(eventsArray);
+          setLoading(false);
+        },
+        error => {
+          console.log(error.massage);
+        },
+      );
+    return () => subscriber();
+  }, []);
+
+
+  ///////////////////////////////////////////////////////////////
+  const renderItem = ({ item }) => <Card props={item} />;
+
+
+  //////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
+  const navigation = useNavigation();
+  console.log(events);
   return (
     <Center flex={'1'} bgColor="warmGray.5">
       <ScrollView w="full">
@@ -37,7 +117,7 @@ const AccountScreen = () => {
 
           <Box alignItems="center">
             <Avatar bg="green.500" mt="5" size="2xl" source={{
-              uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+              uri: initialValues.image
             }}>
 
               <Avatar.Badge
@@ -52,8 +132,7 @@ const AccountScreen = () => {
               </Avatar.Badge>
 
             </Avatar>
-            <Text>“Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit, sed do” </Text>
+            <Text>{initialValues.firstname} {initialValues.name}</Text>
             <Button colorScheme="green" onPress={() => navigation.navigate('Modification')}
               rightIcon={<Ionicons name="pencil-outline" size={20} color="white" />
               }
@@ -61,43 +140,47 @@ const AccountScreen = () => {
               Modifier le profil
             </Button>
             <Divider my={2} mt="5" />
-
-            {/* ajouter icon email */}
-            <Text mt="5"><Ionicons name="ios-mail-sharp" size={10} /> name@gmail.com </Text>
-            <Text><Ionicons name="bar-chart-outline" size={10} /> Niveau intermédiaire </Text>
-            <Text><FontAwesomeIcon name="fish" size={10} /> Pèche à la carpe</Text>
-
+            <Text mt="5"><Ionicons name="ios-mail-sharp" size={10} /> {initialValues.email} </Text>
+            <Text><Ionicons name="bar-chart-outline" size={10} /> {initialValues.level} </Text>
+            <Text><FontAwesomeIcon name="fish" size={10} /> {initialValues.fishing_techniques}</Text>
             <Divider my={2} mt="5" />
-
           </Box>
+
           <Box>
             <Center>
-              <Text color="muted.50">MES PRECEDENTES SORTIES</Text>
+              <Text >MES SORTIES A VENIR</Text>
             </Center>
-            <ScrollView horizontal={true}>
-              <Stack direction="row" space="3" mt="5">
-                <Card />
-                <Card />
-                <Card />
-              </Stack>
-            </ScrollView>
+            <Stack direction="row" space="3" mt="5" >
+              <FlatList
+                horizontal={true}
+                data={events}
+                keyExtractor={item => item.id}
+                renderItem={renderItem}
+                ListEmptyComponent={() => (
+                  <Text my="5">Aucun evenement trouvé !</Text>
+                )}
+              />
+            </Stack>
           </Box>
           <Box mt="5">
             <Center>
-              <Text color="muted.50">MES SORTIES A VENIR</Text>
+              <Text>MES PRECEDENTES SORTIES</Text>
             </Center>
-            <ScrollView horizontal={true}>
-              <Stack direction="row" space="3" mt="5">
-                <Card />
-                <Card />
-                <Card />
-              </Stack>
-            </ScrollView>
+            <Stack horizontal={true}>
+              <FlatList
+                horizontal={true}
+                data={events}
+                keyExtractor={item => item.id}
+                renderItem={renderItem}
+                ListEmptyComponent={() => (
+                  <Text my="5">Aucun evenement trouvé !</Text>
+                )}
+              />
+            </Stack>
           </Box>
         </Box>
       </ScrollView>
     </Center>
-
   )
 }
 
