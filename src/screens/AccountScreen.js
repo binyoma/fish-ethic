@@ -41,6 +41,8 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import Card from '../components/Card';
 // Hook React navigation pour accéder au context de la react-navigation
 import { useNavigation } from '@react-navigation/native';
+import dayjs from 'dayjs';
+import 'dayjs/locale/fr';
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
 
@@ -49,7 +51,6 @@ const AccountScreen = () => {
   // toast de notification
   const toast = useToast();
 
-
   ///////////////////////////////////////////////////////////////////////
   const [initialValues, setInitialValues] = useState({});
   useEffect(() => {
@@ -57,31 +58,57 @@ const AccountScreen = () => {
     firestore()
       .collection('users')
       .doc(id)
-      .get()
-      .then(docSnap => {
-        const data = docSnap.data();
-        setInitialValues({
-          firstname: data['firstname'],
-          name: data['name'],
-          image: data['image'],
-          level: data['level'],
-          fishing_techniques: data['fishing_techniques'],
-          email: data['email'],
+      .onSnapshot(
+        docSnap => {
+          const data = docSnap.data();
+          setInitialValues({
+            firstname: data['firstname'],
+            name: data['name'],
+            image: data['image'],
+            level: data['level'],
+            fishing_techniques: data['fishing_techniques'],
+            email: data['email'],
+          });
         });
-      });
   }, []);
   ///////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////
   const [events, setevents] = useState([]);
+  const [oldEvents, setOldEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     const user_id = auth().currentUser.uid;
-
-    const subscriber = firestore()
+    const oldevents = firestore()
       .collection('events')
       .where('user_id', '==', user_id)
+      .where('endAt', "<=", new Date())
+      .onSnapshot(
+        querySnapshot => {
+          const eventsArray = [];
+          querySnapshot.forEach(doc => {
+            eventsArray.push({
+              ...doc.data(),
+              id: doc.id,
+            });
+          });
+          setOldEvents(eventsArray);
+          setLoading(false);
+        },
+        error => {
+          console.log(error.massage);
+        },
+      );
+    return () => oldevents();
+  }, []);
+
+  /////////////////////////////////////////////////////////////////////////////////
+  useEffect(() => {
+    const user_id = auth().currentUser.uid;
+    const events = firestore()
+      .collection('events')
+      .where('user_id', '==', user_id)
+      .where('endAt', ">=", new Date())
       .onSnapshot(
         querySnapshot => {
           const eventsArray = [];
@@ -98,18 +125,16 @@ const AccountScreen = () => {
           console.log(error.massage);
         },
       );
-    return () => subscriber();
+    return () => events();
   }, []);
-
 
   ///////////////////////////////////////////////////////////////
   const renderItem = ({ item }) => <Card props={item} />;
 
-
   //////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////
   const navigation = useNavigation();
-  console.log(events);
+
   return (
     <Center flex={'1'} bgColor="warmGray.5">
       <ScrollView w="full">
@@ -169,7 +194,7 @@ const AccountScreen = () => {
             <Stack horizontal={true}>
               <FlatList
                 horizontal={true}
-                data={events}
+                data={oldEvents}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
                 ListEmptyComponent={() => (
@@ -185,3 +210,4 @@ const AccountScreen = () => {
 }
 
 export default AccountScreen
+

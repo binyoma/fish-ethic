@@ -10,12 +10,12 @@ import {
   Stack,
   Pressable,
 } from 'native-base';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 const Card = props => {
   const item = props;
-  console.log(item, 'hello');
+  // console.log("item", item);
   const navigation = useNavigation();
   return (
     <Pressable onPress={() => navigation.navigate('MoreInfo', item)}>
