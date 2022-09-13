@@ -1,13 +1,13 @@
-import { StyleSheet, useColorScheme, Alert } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { NativeBaseProvider, extendTheme } from 'native-base';
+import {StyleSheet, useColorScheme, Alert} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {NativeBaseProvider, extendTheme} from 'native-base';
 import {
   NavigationContainer,
   DarkTheme,
   DefaultTheme,
 } from '@react-navigation/native';
 import RootNavigation from './navigations/RootNavigation';
-import { AuthContext } from './contexts/AuthContext';
+import {AuthContext} from './contexts/AuthContext';
 // import messaging from '@react-native-firebase/messaging';
 
 // config du thème
@@ -51,7 +51,7 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={customTheme}>
-      <AuthContext.Provider value={{ authenticated, setAuthenticated }}>
+      <AuthContext.Provider value={{authenticated, setAuthenticated}}>
         <NavigationContainer
           theme={schema === 'dark' ? DarkTheme : DefaultTheme}
         >
