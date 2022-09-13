@@ -5,7 +5,7 @@ import {
   Button,
   Center,
   FormControl,
-  Heading,
+  HStack,
   Input,
   ScrollView,
   useToast,
@@ -18,9 +18,8 @@ import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
  * Google firebase
  */
 
- import firestore from '@react-native-firebase/firestore';
- import auth from '@react-native-firebase/auth';
- 
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 const AddEventScreen = () => {
   // traitement formulaire
@@ -39,8 +38,8 @@ const AddEventScreen = () => {
   //création de ref sur les inputs des champs des dates
   const heureDebutInputRef = useRef(null);
   const heureFinInputRef = useRef(null);
-   // toast de notification de l'utilisateur
-   const toast = useToast();
+  // toast de notification de l'utilisateur
+  const toast = useToast();
 
   const validationSchema = Yup.object({
     title: Yup.string().required('Le titre est requis'),
@@ -49,13 +48,13 @@ const AddEventScreen = () => {
       .typeError("La valeur renseigné n'est pas une date valide")
       .required('La date de début est requise'),
     startHour: Yup.date()
-      .typeError("La valeur renseigné n'est pas une date valide")
+      .typeError("La valeur renseigné n'est pas valide")
       .required("L'heure de début est requise"),
     endAt: Yup.date()
       .typeError("La valeur renseigné n'est pas une date valide")
       .required('La date de fin est requise'),
     endHour: Yup.date()
-      .typeError("La valeur renseigné n'est pas une date valide")
+      .typeError("La valeur renseigné n'est pas valide")
       .required("L'heure de début est requise"),
     description: Yup.string().required('La description est réquise'),
   });
@@ -98,7 +97,7 @@ const AddEventScreen = () => {
     resetForm,
   } = useFormik({
     initialValues: {
-      title:'',
+      title: '',
       place: '',
       startAt: null,
       startHour: null,
@@ -109,36 +108,26 @@ const AddEventScreen = () => {
     onSubmit: values => createEvent(values),
     validationSchema,
   });
-  // firestore 
-  const createEvent= values =>{
+  // firestore
+  const createEvent = values => {
     firestore()
       .collection('events')
       .add({
         ...values,
-        createdAt:firestore.FieldValue.serverTimestamp(),
-        user_id:auth().currentUser.uid,
-      }).then(async newAdvert => {
+        createdAt: firestore.FieldValue.serverTimestamp(),
+        user_id: auth().currentUser.uid,
+      })
+      .then(async newAdvert => {
         toast.show({
           description: 'Evenement crée avec succès !',
         });
         resetForm();
-  })
-  }
+      });
+  };
   return (
     <Center flex="1" bgColor="warmGray.5">
       <ScrollView w="full">
         <Box w="95%" mx="auto" px="1">
-          <Box
-            _dark={{
-              bg: 'black',
-            }}
-            _light={{
-              backgroundColor: 'green.700',
-            }}>
-            <Heading size={'lg'} color="white">
-              Ajout évenement
-            </Heading>
-          </Box>
           <FormControl isInvalid={touched.title && errors?.title}>
             <FormControl.Label>Titre</FormControl.Label>
             <Input
@@ -157,81 +146,50 @@ const AddEventScreen = () => {
             />
             <FormControl.ErrorMessage>{errors?.place}</FormControl.ErrorMessage>
           </FormControl>
-          <FormControl isInvalid={touched.startAt && errors?.startAt}>
-            <FormControl.Label>Date de début</FormControl.Label>
-            <Input
-              onFocus={() => setShowDebutDatePicker(true)}
-              showSoftInputOnFocus={false}
-              ref={dateDebutInputRef}
-              value={values.startAt?.toISOString()}
-              onChangeText={handleChange('startAt')}
-            />
-            <FormControl.ErrorMessage>
-              {errors?.startAt}
-            </FormControl.ErrorMessage>
-          </FormControl>
-          {showDebutDatePicker &&
-            DateTimePickerAndroid.open({
-              mode: 'date',
-              value: new Date(),
-              onChange: dateDebutChange,
-            })}
-
-          <FormControl isInvalid={touched.startHour && errors?.startHour}>
-            <FormControl.Label>Heure de début</FormControl.Label>
-            <Input
-              onFocus={() => setShowDebutHeurePicker(true)}
-              showSoftInputOnFocus={false}
-              ref={heureDebutInputRef}
-              value={values.startHour?.toISOString()}
-              onChangeText={handleChange('startHour')}
-            />
-            <FormControl.ErrorMessage>
-              {errors?.startHour}
-            </FormControl.ErrorMessage>
-          </FormControl>
-          {showDebutHeurePicker &&
-            DateTimePickerAndroid.open({
-              mode: 'time',
-              value: new Date(),
-              onChange: heureDebutChange,
-            })}
-          <FormControl isInvalid={touched.endAt && errors?.endAt}>
-            <FormControl.Label>Date de Fin</FormControl.Label>
-            <Input
-              onFocus={() => setShowFinDatePicker(true)}
-              showSoftInputOnFocus={false}
-              ref={dateFinInputRef}
-              value={values.endAt?.toISOString()}
-              onChangeText={handleChange('endAt')}
-            />
-            <FormControl.ErrorMessage>
-              {errors?.endAt}
-            </FormControl.ErrorMessage>
-          </FormControl>
-          {showFinDatePicker &&
-            DateTimePickerAndroid.open({
-              mode: 'date',
-              value: new Date(),
-              onChange: dateFinChange,
-            })}
-          <FormControl isInvalid={touched.endHour && errors?.endHour}>
-            <FormControl.Label>heure de Fin</FormControl.Label>
-            <Input
-              onFocus={() => setShowFinHeurePicker(true)}
-              showSoftInputOnFocus={false}
-              ref={heureFinInputRef}
-              value={values.endHour?.toISOString()}
-              onChangeText={handleChange('endHour')}
-            />
-            <FormControl.ErrorMessage>{errors?.endHour}</FormControl.ErrorMessage>
-          </FormControl>
-          {showFinHeurePicker &&
-            DateTimePickerAndroid.open({
-              mode: 'time',
-              value: new Date(),
-              onChange: heureFinChange,
-            })}
+          <HStack space={2} justifyContent="flex-start">
+            <Center width="50%">
+              <FormControl isInvalid={touched.startAt && errors?.startAt}>
+                <FormControl.Label>Date de début</FormControl.Label>
+                <Input
+                  onFocus={() => setShowDebutDatePicker(true)}
+                  showSoftInputOnFocus={false}
+                  ref={dateDebutInputRef}
+                  value={values.startAt?.toLocaleDateString()}
+                  onChangeText={handleChange('startAt')}
+                />
+                <FormControl.ErrorMessage>
+                  {errors?.startAt}
+                </FormControl.ErrorMessage>
+              </FormControl>
+              {showDebutDatePicker &&
+                DateTimePickerAndroid.open({
+                  mode: 'date',
+                  value: new Date(),
+                  onChange: dateDebutChange,
+                })}
+            </Center>
+            <Center width="47%">
+              <FormControl isInvalid={touched.startHour && errors?.startHour}>
+                <FormControl.Label>Heure de début</FormControl.Label>
+                <Input
+                  onFocus={() => setShowDebutHeurePicker(true)}
+                  showSoftInputOnFocus={false}
+                  ref={heureDebutInputRef}
+                  value={values.startHour?.toLocaleTimeString()}
+                  onChangeText={handleChange('startHour')}
+                />
+                <FormControl.ErrorMessage>
+                  {errors?.startHour}
+                </FormControl.ErrorMessage>
+              </FormControl>
+              {showDebutHeurePicker &&
+                DateTimePickerAndroid.open({
+                  mode: 'time',
+                  value: new Date(),
+                  onChange: heureDebutChange,
+                })}
+            </Center>
+          </HStack>
           <FormControl>
             <FormControl.Label>Description</FormControl.Label>
             <Input
@@ -240,12 +198,51 @@ const AddEventScreen = () => {
               onChangeText={handleChange('description')}
             />
           </FormControl>
-          <FormControl>
-            <FormControl.Label>Photo</FormControl.Label>
-            {/* <Input placeholder="Choisir la photo" /> */}
-            <Button>prendre ou choisir un photo</Button>
-          </FormControl>
-          <Button colorScheme="green" onPress={handleSubmit}>
+          <HStack space={2} justifyContent="flex-start">
+            <Center width="50%">
+              <FormControl isInvalid={touched.endAt && errors?.endAt}>
+                <FormControl.Label>Date de fin</FormControl.Label>
+                <Input
+                  onFocus={() => setShowFinDatePicker(true)}
+                  showSoftInputOnFocus={false}
+                  ref={dateFinInputRef}
+                  value={values.endAt?.toLocaleDateString()}
+                  onChangeText={handleChange('endAt')}
+                />
+                <FormControl.ErrorMessage>
+                  {errors?.endAt}
+                </FormControl.ErrorMessage>
+              </FormControl>
+              {showFinDatePicker &&
+                DateTimePickerAndroid.open({
+                  mode: 'date',
+                  value: new Date(),
+                  onChange: dateFinChange,
+                })}
+            </Center>
+            <Center width="47%">
+              <FormControl isInvalid={touched.endHour && errors?.endHour}>
+                <FormControl.Label>Heure de fin</FormControl.Label>
+                <Input
+                  onFocus={() => setShowFinHeurePicker(true)}
+                  showSoftInputOnFocus={false}
+                  ref={heureFinInputRef}
+                  value={values.endHour?.toLocaleTimeString()}
+                  onChangeText={handleChange('endHour')}
+                />
+                <FormControl.ErrorMessage>
+                  {errors?.endHour}
+                </FormControl.ErrorMessage>
+              </FormControl>
+              {showFinHeurePicker &&
+                DateTimePickerAndroid.open({
+                  mode: 'time',
+                  value: new Date(),
+                  onChange: heureFinChange,
+                })}
+            </Center>
+          </HStack>
+          <Button colorScheme="green" onPress={handleSubmit} margin="5">
             Publier
           </Button>
         </Box>
