@@ -21,6 +21,7 @@ const customTheme = extendTheme({
       titreDarkmode: 'FFFFFF',
       green: '#5bba6f',
       darkGrey: '#1F2937',
+      yellow: '#ffca3a',
     },
   },
   config,

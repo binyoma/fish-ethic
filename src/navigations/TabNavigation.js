@@ -1,16 +1,19 @@
 import React from 'react';
 // react-navigation stack
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // react-native-vector-icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Mes écrans
 import HomeScreen from '../screens/HomeScreen';
-import { useTheme } from 'native-base';
+import {useTheme} from 'native-base';
 
 // import StackNavigation from './StackNavigation';
 import ResearchScreen from '../screens/ResearchScreen';
-import AddScreen from '../screens/AddScreen';
+import AddEventScreen from '../screens/AddEventScreen';
+
 import StackNavigationAccount from '../navigations/StackNavigationAccount';
+
+import CustomHeader from '../components/CustomHeader';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,8 +21,8 @@ export default function TabNavigation() {
   const theme = useTheme();
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
           let iconName;
 
           if (route.name === 'Home') {
@@ -37,7 +40,6 @@ export default function TabNavigation() {
         },
         tabBarActiveTintColor: theme.colors.primary.green,
         tabBarInactiveTintColor: 'gray',
-        headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarStyle: {
           paddingTop: 2,
@@ -45,29 +47,32 @@ export default function TabNavigation() {
         tabBarLabelStyle: {
           paddingBottom: 2,
         },
-      })}>
+        header: () => <CustomHeader />,
+        headerStyle: {height: 200},
+      })}
+    >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={{ title: 'Accueil' }}
+        options={{title: 'Accueil'}}
       />
+
       <Tab.Screen
         name="Add"
-        component={AddScreen}
-        options={{ title: 'Ajouter' }}
+        component={AddEventScreen}
+        options={{title: 'Ajouter'}}
       />
       <Tab.Screen
         name="Research"
         component={ResearchScreen}
-        options={{ title: 'Recherche' }}
+        options={{title: 'Recherche'}}
       />
 
       <Tab.Screen
         name="Account"
         component={StackNavigationAccount}
-        options={{ title: 'Mon compte' }}
+        options={{title: 'Mon compte'}}
       />
-
     </Tab.Navigator>
   );
 }

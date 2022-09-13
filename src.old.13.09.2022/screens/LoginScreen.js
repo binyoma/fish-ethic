@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // NATIVE BASE
 import {
   Box,
@@ -15,7 +15,7 @@ import {
   useToast,
 } from 'native-base';
 //import du theme
-import {useTheme} from 'native-base';
+import { useTheme } from 'native-base';
 
 // faire disparaitre les warnings
 LogBox.ignoreLogs([
@@ -23,7 +23,7 @@ LogBox.ignoreLogs([
 ]);
 
 // Hook React navigation pour accéder au context de la react-navigation
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 // stockage
 import AsyncStorage from '@react-native-async-storage/async-storage';
 /*******************************************************
@@ -36,14 +36,14 @@ import auth from '@react-native-firebase/auth';
  * FIREBASE                                            \
  ******************************************************/
 // Custom context pour la gestion globale du state du status d'auth avec son setter.
-import {AuthContext} from './../contexts/AuthContext';
+import { AuthContext } from './../contexts/AuthContext';
 
 /*******************************************************
  *  Traitement de formulaire                           \
  ******************************************************/
 
 // Librairie de traitement de formulaire
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 // librairie de validation de données
 
 import * as yup from 'yup';
@@ -53,16 +53,17 @@ import touchID from 'react-native-touch-id';
 
 // Keychain
 import * as Keychain from 'react-native-keychain';
-import {LogBox} from 'react-native';
+import { LogBox } from 'react-native';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
-  //theme
+  //theme 
   const theme = useTheme();
   console.log(navigation);
 
+
   const authenContext = useContext(AuthContext);
-  const {setAuthenticated} = authenContext;
+  const { setAuthenticated } = authenContext;
 
   // vérif accord pour le touch id
   const [isTouchID, setIsTouchID] = useState(false);
@@ -105,7 +106,7 @@ export default function LoginScreen() {
   }, [isTouchID]);
 
   const login = values => {
-    const {email, password} = values;
+    const { email, password } = values;
     // Condition de connexion ok
     auth()
       .signInWithEmailAndPassword(email, password)
@@ -153,7 +154,7 @@ export default function LoginScreen() {
       console.log('toto');
       const credentials = await Keychain.getGenericPassword();
       if (credentials) {
-        login({email: credentials.username, password: credentials.password});
+        login({ email: credentials.username, password: credentials.password });
       }
     } catch (err) {
       console.log('====================================');
@@ -182,17 +183,16 @@ export default function LoginScreen() {
     <Center flex={'1'} bgColor="warmGray.5">
       <ScrollView w="full">
         <Box w="95%" mx="auto" px="1">
-          <Heading size="lg">Content de vous revoir</Heading>
+          <Heading size="lg">
+            Content de vous revoir
+          </Heading>
           <Text my={'1.5'} color="muted.500">
-            Connectez-vous pour continuer
+            Connecter-vous pour continuer
           </Text>
           <VStack space={'2'}>
             <FormControl>
               <FormControl.Label>Email</FormControl.Label>
-              <Input
-                value={values.email}
-                onChangeText={handleChange('email')}
-              />
+              <Input value={values.email} onChangeText={handleChange('email')} />
             </FormControl>
             <FormControl>
               <FormControl.Label>Mot de passe</FormControl.Label>
@@ -204,8 +204,7 @@ export default function LoginScreen() {
 
               <Link
                 onPress={() => {
-                  auth()
-                    .sendPasswordResetEmail(values.email)
+                  auth().sendPasswordResetEmail(values.email)
                     .then(() => {
                       console.log('Password reset email sent!');
                       toast.show({
@@ -213,7 +212,7 @@ export default function LoginScreen() {
                         placement: 'bottom',
                       });
                     })
-                    .catch(error => {
+                    .catch((error) => {
                       var errorCode = error.code;
                       var errorMessage = error.message;
 

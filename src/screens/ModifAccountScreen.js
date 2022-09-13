@@ -182,6 +182,7 @@ const ModifAccountScreen = () => {
 
                 const user = auth().currentUser;
                 user.updateEmail(data['email']).then(() => {
+
                     // ...
                 }).catch((error) => {
                     // An error occurred

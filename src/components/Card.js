@@ -4,72 +4,60 @@ import {
   Text,
   AspectRatio,
   Box,
-  Center,
   Heading,
   HStack,
   Image,
   Stack,
+  Pressable,
 } from 'native-base';
-
-const Card = () => {
+import {useNavigation} from '@react-navigation/native';
+import dayjs from 'dayjs';
+import 'dayjs/locale/fr';
+const Card = props => {
+  const item = props;
+  console.log(item, 'hello');
+  const navigation = useNavigation();
   return (
-    <Box alignItems="center">
-      <Box
-        maxW="80"
-        rounded="lg"
-        overflow="hidden"
-        borderColor="#5BBA6F"
-        borderWidth="1"
-        _dark={{
-          borderColor: 'coolGray.600',
-          backgroundColor: 'gray.700',
-        }}
-        _web={{
-          shadow: 2,
-          borderWidth: 0,
-        }}
-        _light={{
-          backgroundColor: '#1F2937',
-        }}
-      >
-        <Box>
-          <AspectRatio w="100%" ratio={16 / 9}>
-            <Image
-              h="100%"
-              source={require('../assets/fish1.jpg')}
-              alt="image"
-            />
-          </AspectRatio>
-        </Box>
-        <Stack p="4" space={3}>
-          <Stack space={2}>
-            <Heading color="white" size="md" ml="-1">
-              Carpe en Somme
-            </Heading>
-            <Text
-              fontSize="xs"
-              _light={{ color: 'muted.50' }}
-              fontWeight="500"
-              ml="-0.5"
-              mt="-1"
-            >
-              The Silicon Valley of India.
-            </Text>
-          </Stack>
-          <Text fontWeight="400" _light={{ color: 'muted.50' }}>
-            Bengaluru (also called Bangalore) is the center of India's high-tech
-            industry. The city is also known for its parks and nightlife.
-          </Text>
-          <HStack alignItems="center" space={4} justifyContent="space-between">
-            <HStack alignItems="center">
-              <Text color="white" fontWeight="400">
-                6 mins ago
+    <Pressable onPress={() => navigation.navigate('MoreInfo', item)}>
+      <Box alignItems="center">
+        <Box
+          maxW="80"
+          rounded="lg"
+          overflow="hidden"
+          borderColor="coolGray.200"
+          borderWidth="2"
+          _dark={{
+            borderColor: 'coolGray.600',
+            backgroundColor: 'gray.700',
+          }}
+        >
+          <Box>
+            <AspectRatio w="100%" ratio={16 / 9}>
+              <Image
+                h="100%"
+                source={require('../assets/fish1.jpg')}
+                alt="image"
+              />
+            </AspectRatio>
+          </Box>
+          <Stack p="4" space={3}>
+            <Stack space={2}>
+              <Heading size="md" ml="-1">
+                {item?.props?.title}
+              </Heading>
+            </Stack>
+            <Stack>
+              <Text fontWeight="400">{item?.props?.description}</Text>
+              <Text>
+                posté le:
+                {item?.props?.createdAt &&
+                  dayjs(item.props.createdAt?.toDate()).format('DD/MM/YYYY')}
               </Text>
-            </HStack>
-          </HStack>
-        </Stack>
+            </Stack>
+          </Stack>
+        </Box>
       </Box>
-    </Box>
+    </Pressable>
   );
 };
 

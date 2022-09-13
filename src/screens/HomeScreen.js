@@ -1,28 +1,64 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Card from '../components/Card';
-import { Avatar, Box, Center, HStack, Stack, Text } from 'native-base';
-import { useTheme } from 'native-base';
-import { ScrollView } from 'react-native';
+import {Avatar, Box, Center, FlatList, HStack, Stack, Text} from 'native-base';
+import {useTheme} from 'native-base';
+import {ScrollView} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+
 const HomeScreen = () => {
+  const [events, setEvents] = useState();
+  const [loading, setLoading] = useState();
+
+  // affichage de tous les évènements
+  useEffect(() => {
+    const allEvents = firestore()
+      .collection('events')
+      .onSnapshot(
+        querySnapShot => {
+          const eventsArray = [];
+          querySnapShot.forEach(doc => {
+            eventsArray.push({
+              ...doc.data(),
+              id: doc.id,
+            });
+          });
+          setEvents(eventsArray);
+          setLoading(false);
+        },
+        error => {
+          console.log(error.message);
+        },
+      );
+    return () => allEvents();
+  }, []);
+
+  const renderItem = ({item}) => <Card props={item} />;
+
   //theme
   const theme = useTheme();
   return (
     <ScrollView>
-      <Box bg="primary.darkGrey">
+      <Box bgColor="warmGray.5">
         <Box>
-          <Center>
-            <Text color="muted.50">LES DERNIERES SORTIES</Text>
+          <Center mt="3">
+            <Text>LES DERNIERES SORTIES</Text>
           </Center>
-          <ScrollView horizontal={true}>
-            <Stack direction="row" space="3" mt="5">
-              <Card />
-              <Card />
-              <Card />
-            </Stack>
-          </ScrollView>
+
+          <Stack direction="row" space="3" mt="5">
+            <FlatList
+              horizontal={true}
+              data={events}
+              keyExtractor={item => item.id}
+              renderItem={renderItem}
+              ListEmptyComponent={() => (
+                <Text my="5">Aucun don n'est trouvé !</Text>
+              )}
+            />
+          </Stack>
         </Box>
         <Center mt="5">
-          <Text color="muted.50">BIENVENUE A NOS NOUVEAUX MEMBRES</Text>
+          <Text>BIENVENUE A NOS NOUVEAUX MEMBRES</Text>
         </Center>
         <ScrollView horizontal={true}>
           <HStack space={2} mt="5">
@@ -110,15 +146,17 @@ const HomeScreen = () => {
         </ScrollView>
         <Box mt="5">
           <Center>
-            <Text color="muted.50">LES SORTIES A VENIR</Text>
+            <Text>LES SORTIES A VENIR</Text>
           </Center>
-          <ScrollView horizontal={true}>
-            <Stack direction="row" space="3" mt="5">
-              <Card />
-              <Card />
-              <Card />
-            </Stack>
-          </ScrollView>
+
+          <Stack direction="row" space="3" mt="5">
+            <FlatList
+              horizontal={true}
+              data={events}
+              keyExtractor={item => item.id}
+              renderItem={renderItem}
+            />
+          </Stack>
         </Box>
       </Box>
     </ScrollView>
