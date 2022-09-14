@@ -12,6 +12,7 @@ import CustomHeader from '../components/CustomHeader';
 
 import MoreInfoScreen from '../screens/MoreInfoScreen';
 import HomeScreen from '../screens/HomeScreen';
+import ModifEventScreen from '../screens/ModifEventScreen';
 // react-navigation
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,14 @@ export default function RootNavigation() {
             headerTitle: props => <CustomHeader {...props} />,
           }}
         />
+        <Stack.Screen
+          name="Modification évenement"
+          component={ModifEventScreen}
+          options={{
+            headerTitle: props => <CustomHeader {...props} />,
+          }}
+        />
+
       </Stack.Group>
     </Stack.Navigator>
   );

@@ -1,4 +1,3 @@
-import {View, Text} from 'react-native';
 import React, {useRef, useState} from 'react';
 import {
   Box,
@@ -8,11 +7,19 @@ import {
   HStack,
   Input,
   ScrollView,
+  useDisclose,
   useToast,
+  Pressable,
+  useColorModeValue,
+  Actionsheet,
 } from 'native-base';
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
+// react-native-vector-icons
+import Ionicons from 'react-native-vector-icons/Ionicons';
+// camera
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 /**
  * Google firebase
@@ -20,8 +27,13 @@ import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
+
+import uuid from 'react-native-uuid';
 
 const AddEventScreen = () => {
+ 
+  
   // traitement formulaire
   // gestion de l'affichage des pickers de date
   const [showDebutDatePicker, setShowDebutDatePicker] = useState(false);
@@ -104,10 +116,97 @@ const AddEventScreen = () => {
       endAt: null,
       endHour: null,
       description: '',
+      url:'',
     },
     onSubmit: values => createEvent(values),
     validationSchema,
   });
+  
+    //camera
+    const { isOpen, onOpen, onClose } = useDisclose();
+    const takePhoto = async () => {
+        let options = {
+            mediaType: 'photo',
+            maxWidth: 500,
+            maxHeight: 500,
+            includeBase64: true,
+            saveToPhotos: true,
+        };
+        const response = await launchCamera(options);
+
+        const { didCancel, errorCode, errorMessage, assets } = response;
+
+        if (didCancel) {
+            console.log('====================================');
+            console.log("prise de photo annulé par l'utilisateur");
+            toast.show({
+                title: "Prise de photo annulé par l'utilisateur",
+                placement: 'bottom',
+            });
+            console.log('====================================');
+        } else if (errorCode) {
+            console.log('====================================');
+            console.log(errorMessage);
+            console.log('====================================');
+        } else {
+            const img = assets[0];
+            console.log("photo ok");
+            uploadPhoto(img);
+        }
+    };
+
+    const getPhotoFromStorage = async () => {
+        const response = await launchImageLibrary(options);
+        let options = {
+            mediaType: 'photo',
+            maxWidth: 500,
+            maxHeight: 500,
+            includeBase64: true,
+            saveToPhotos: true,
+        };
+
+        const { didCancel, errorCode, errorMessage, assets } = response;
+
+        if (didCancel) {
+            console.log('====================================');
+            console.log("prise de photo annulé par l'utilisateur");
+            toast.show({
+                title: "Prise de photo annulé par l'utilisateur",
+                placement: 'bottom',
+            });
+            console.log('====================================');
+        } else if (errorCode) {
+            console.log('====================================');
+            console.log(errorMessage);
+            console.log('====================================');
+        } else {
+            const img = assets[0];
+            console.log("photo ok");
+            uploadPhoto(img);
+        }
+    };
+     //upload avatar
+     const uploadPhoto = async img => {
+      // on crée une référence pour l'image que le souhaite update avec son nom de stockage
+  
+      const reference = storage().ref(`${uuid.v4()}.jpg`);
+      reference.putFile(img.uri).then(() => {
+          console.log('====================================');
+          console.log('image uploaded to the bucket');
+          console.log('====================================');
+          reference.getDownloadURL().then(url => {
+            setFieldValue('url', url);
+            console.log(url);
+        });
+          toast.show({
+              title: 'Photo uploaded',
+              placement: 'bottom',
+          });
+      });
+     
+    
+  };
+
   // firestore
   const createEvent = values => {
     firestore()
@@ -118,6 +217,7 @@ const AddEventScreen = () => {
         user_id: auth().currentUser.uid,
       })
       .then(async newAdvert => {
+        console.log("ajout ok")
         toast.show({
           description: 'Evenement crée avec succès !',
         });
@@ -242,10 +342,27 @@ const AddEventScreen = () => {
                 })}
             </Center>
           </HStack>
+          <Pressable onPress={onOpen}>
+            <Center>
+              <Ionicons
+                name="camera-sharp"
+                size={40}
+                color={useColorModeValue('#000', '#FFF')}
+              />
+            </Center>
+          </Pressable>
           <Button colorScheme="green" onPress={handleSubmit} margin="5">
             Publier
           </Button>
         </Box>
+        <Actionsheet isOpen={isOpen} onClose={onClose}>
+          <Actionsheet.Content>
+            <Actionsheet.Item onPress={takePhoto}>Camera</Actionsheet.Item>
+            <Actionsheet.Item onPress={getPhotoFromStorage}>
+              Galerie photo
+            </Actionsheet.Item>
+          </Actionsheet.Content>
+        </Actionsheet>
       </ScrollView>
     </Center>
   );
