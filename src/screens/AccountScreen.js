@@ -99,6 +99,7 @@ const AccountScreen = () => {
           console.log(error.massage);
         },
       );
+    // Détacher un écouteur
     return () => oldevents();
   }, []);
 
