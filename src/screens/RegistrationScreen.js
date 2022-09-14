@@ -41,8 +41,11 @@ const validationSchema = yup.object({
     .required('Le mot de passe est requis'),
   confirmPassword: yup
     .string()
+    .required('Le mot de passe est requis')
     .oneOf([yup.ref('password'), null], 'Les mots de passe sont différents'),
-  // pseudo: yup.string().required('Le pseudo est requis'),
+  pseudo: yup
+    .string()
+    .required('Le pseudo est requis'),
 });
 
 //import du theme
@@ -61,7 +64,7 @@ export default function RegistrationScreen() {
       email: '',
       password: '',
       confirmPassword: '',
-      // pseudo: '',
+      pseudo: '',
     },
     onSubmit: values => signIn(values),
     validationSchema,
@@ -153,16 +156,16 @@ export default function RegistrationScreen() {
               </FormControl.ErrorMessage>
             </FormControl>
 
-            {/* <FormControl isInvalid={touched.Pseudo && errors?.Pseudo}>
-              <FormControl.Label>Prénom</FormControl.Label>
+            <FormControl isInvalid={touched.pseudo && errors?.pseudo}>
+              <FormControl.Label>Pseudo</FormControl.Label>
               <Input
-                value={values.Pseudo}
-                onChangeText={handleChange('Pseudo')}
+                value={values.pseudo}
+                onChangeText={handleChange('pseudo')}
               />
               <FormControl.ErrorMessage>
-                {errors?.Pseudo}
+                {errors?.pseudo}
               </FormControl.ErrorMessage>
-            </FormControl> */}
+            </FormControl>
 
             <Button bg={theme.colors.primary.green} onPress={handleSubmit}>
               S'inscrire
