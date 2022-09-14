@@ -1,5 +1,5 @@
 import {StyleSheet, View} from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Text,
   AspectRatio,
@@ -26,7 +26,7 @@ const getUrl=async ref=>{
 const Card = props => {
   const [photoUrl, setPhotoUrl]=useState('');
   const item = props;
-  console.log(item, 'hello');
+
   const navigation = useNavigation();
   
 
@@ -67,6 +67,7 @@ const Card = props => {
               </Stack>
               <Stack>
                 <Text fontWeight="400">{item?.props?.description}</Text>
+              <Text>Lieu: {item?.props?.place}</Text>
                 <Text>
                   posté le:
                   {item?.props?.createdAt &&

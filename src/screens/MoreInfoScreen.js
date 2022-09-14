@@ -1,5 +1,5 @@
-import {ScrollView, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import {ScrollView, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   Heading,
@@ -7,20 +7,81 @@ import {
   Image,
   Stack,
   Text,
-  Pressable,
   Button,
   AspectRatio,
   useTheme,
-  IconButton,
+  Link,
 } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import {useNavigation} from '@react-navigation/native';
+
 const MoreInfoScreen = props => {
   const item = props.route.params;
+  const [loading, setLoading] = useState();
+  const [users, setUsers] = useState();
+  const [subscriber, setSubscriber] = useState([]);
+  const navigation = useNavigation();
 
+  // recuperation du pseudo
+  useEffect(() => {
+    const user_id = item.props.user_id;
+    if (!users) {
+      firestore()
+        .collection('users')
+        .doc(user_id)
+        .onSnapshot(documentSnapshot => {
+          setUsers(documentSnapshot.data());
+          setLoading(false);
+        });
+    }
+  }, []);
+  useEffect(() => {
+    if (item.props.subscriber) {
+      item.props.subscriber.map(async item => {
+        const user = await firestore().collection('users').doc(item).get();
+        let data = [{pseudo: user.data().pseudo, id: item}];
+        setSubscriber(data);
+      });
+    }
+  }, [loading]);
+
+  // inscription à une sortie
+  const subscribEvent = async () => {
+    const event = await firestore()
+      .collection('events')
+      .doc(item.props.id)
+      .get();
+
+    if (event.data().subscriber) {
+      let data = [...event.data().subscriber, auth().currentUser.uid];
+
+      firestore()
+        .collection('events')
+        .doc(item.props.id)
+        .update({subscriber: data})
+        .then(() => {
+          console.log('bien enregistré');
+        });
+    } else {
+      firestore()
+        .collection('events')
+        .doc(item.props.id)
+        .update({subscriber: [auth().currentUser.uid]})
+        .then(() => {
+          console.log('bien enregistré');
+        });
+    }
+  };
+  // utilisation du theme
   const theme = useTheme();
-  return (
+
+  return loading ? (
+    <ActivityIndicator />
+  ) : (
     <ScrollView>
       <Box>
         <Box>
@@ -34,7 +95,7 @@ const MoreInfoScreen = props => {
           </AspectRatio>
         </Box>
         <HStack justifyContent="center" mt="3">
-          <Text mr="3">Pseudo</Text>
+          <Text mr="3">{users?.pseudo}</Text>
           <MaterialCommunityIcons
             color={theme.colors.primary.yellow}
             name="star"
@@ -46,43 +107,64 @@ const MoreInfoScreen = props => {
             name="send"
             size={20}
           />
-          <TouchableOpacity>
-            <Text ml="1">Contacter le membre</Text>
-          </TouchableOpacity>
+
+          <Link href="mailTo:paulinegallezot@gmail.com">
+            {' '}
+            Contacter le membre
+          </Link>
         </HStack>
         <Stack mt="4">
           <Heading>{item.props.title}</Heading>
-          <HStack
-            bg={theme.colors.primary.green}
-            mt="5"
-            mb="5"
-            justifyContent="space-around"
-          >
-            <Text>Date</Text>
-            <Text>Heure</Text>
-            <Text>Lieu</Text>
-          </HStack>
-          <HStack
-            bg={theme.colors.primary.green}
-            mt="5"
-            mb="5"
-            justifyContent="space-around"
-          >
-            <Text>
-              Du{' '}
-              {item?.props?.dateDebut &&
-                dayjs(item.props.dateDebut?.toDate()).format('DD/MM/YYYY')}{' '}
+          <Stack bg={theme.colors.primary.green} mt="5" mb="3" p="2" space="2">
+            <Text color="white">
+              Date: Du{' '}
+              {item?.props?.startAt &&
+                dayjs(item.props.startAt?.toDate()).format('DD/MM/YYYY')}{' '}
               au{' '}
-              {item?.props?.dateFin &&
-                dayjs(item.props.dateFin?.toDate()).format('DD/MM/YYYY')}
+              {item?.props?.endAt &&
+                dayjs(item.props.endAt?.toDate()).format('DD/MM/YYYY')}
             </Text>
-            <Text>De </Text>
-            <Text>{item?.props?.lieu}</Text>
-          </HStack>
+            <Text color="white">
+              Heure: De{' '}
+              {item?.props?.startHour &&
+                dayjs(item.props.startHour?.toDate()).format('HH:mm')}{' '}
+              à{' '}
+              {item?.props?.endHour &&
+                dayjs(item.props.endHour?.toDate()).format('HH:mm')}
+            </Text>
+            <Text color="white">Lieu: {item?.props?.place}</Text>
+          </Stack>
 
-          <Text>Description: {item.props.description}</Text>
+          <Text m="2">Description: {item.props.description}</Text>
 
-          <Button mt="5" bg={theme.colors.primary.green}>
+          <Stack m="2">
+            <Text>Participants:</Text>
+            {subscriber.length != 0 ? (
+              subscriber.map(item => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('profil', {subscriber: item.id});
+                    }}
+                  >
+                    <Text> {item.pseudo}|</Text>
+                  </TouchableOpacity>
+                );
+              })
+            ) : (
+              <Text>"Il n'y a pas de participants pour l'instant!"</Text>
+            )}
+          </Stack>
+
+          <Button
+            onPress={() => {
+              subscribEvent();
+            }}
+            mt="5"
+            ml="1"
+            mr="1"
+            bg={theme.colors.primary.green}
+          >
             S'INSCRIRE
           </Button>
         </Stack>

@@ -68,11 +68,7 @@ export default function TabNavigation() {
         options={{title: 'Recherche'}}
       />
 
-      <Tab.Screen
-        name="Account"
-        component={StackNavigationAccount}
-        options={{title: 'Mon compte'}}
-      />
+      <Tab.Screen name="Account" component={StackNavigationAccount} />
     </Tab.Navigator>
   );
 }

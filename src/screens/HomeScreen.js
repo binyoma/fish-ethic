@@ -37,7 +37,9 @@ const HomeScreen = () => {
 
   //theme
   const theme = useTheme();
-  return (
+  return loading ? (
+    <ActivityIndicator />
+  ) : (
     <ScrollView>
       <Box bgColor="warmGray.5">
         <Box>
@@ -52,7 +54,7 @@ const HomeScreen = () => {
               keyExtractor={item => item.id}
               renderItem={renderItem}
               ListEmptyComponent={() => (
-                <Text my="5">Aucun don n'est trouvé !</Text>
+                <Text my="5">Pas de sortie aujour'hui !</Text>
               )}
             />
           </Stack>

@@ -14,10 +14,10 @@ import {
   useToast,
 } from 'native-base';
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import {TouchableOpacity} from 'react-native';
 
 // formik
-import { useFormik } from 'formik';
+import {useFormik} from 'formik';
 import * as yup from 'yup';
 
 // firebase imports
@@ -26,7 +26,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 // import {auth, db} from '../firebase/config';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 // schema de validation
 
@@ -46,17 +46,17 @@ const validationSchema = yup.object({
 });
 
 //import du theme
-import { useTheme } from 'native-base';
+import {useTheme} from 'native-base';
 
 export default function RegistrationScreen() {
-  //theme 
+  //theme
   const theme = useTheme();
   // Récupération du props navigation de react navigation
   const navigation = useNavigation();
   // Toast de notification
   const toast = useToast();
   // Récupération des props useFormik
-  const { values, handleChange, handleSubmit, errors, touched } = useFormik({
+  const {values, handleChange, handleSubmit, errors, touched} = useFormik({
     initialValues: {
       email: '',
       password: '',
@@ -71,7 +71,7 @@ export default function RegistrationScreen() {
      * @var string email
      * @var string password
      */
-    const { email, password } = values;
+    const {email, password} = values;
     // Condition de connexion ok
     auth()
       .createUserWithEmailAndPassword(email.trim(), password.trim())
@@ -82,7 +82,8 @@ export default function RegistrationScreen() {
         delete values.confirmPassword;
         toast.show({
           description: 'Compte créé avec succès !',
-        }); console.log('Compte créé avec succès !')
+        });
+        console.log('Compte créé avec succès !');
         navigation.goBack();
 
         //pas de creation de profil dans l'inscription
@@ -163,7 +164,7 @@ export default function RegistrationScreen() {
               </FormControl.ErrorMessage>
             </FormControl> */}
 
-            <Button colorScheme='green' onPress={handleSubmit}>
+            <Button bg={theme.colors.primary.green} onPress={handleSubmit}>
               S'inscrire
             </Button>
           </VStack>
@@ -182,7 +183,7 @@ export default function RegistrationScreen() {
           </HStack>
           <Box mt="2" mb="5" flexDirection="row">
             <TouchableOpacity>
-              <Text pl={'1.5'} color='${theme.colors.primary.green}'></Text>
+              <Text pl={'1.5'} color="${theme.colors.primary.green}"></Text>
             </TouchableOpacity>
           </Box>
         </Box>
