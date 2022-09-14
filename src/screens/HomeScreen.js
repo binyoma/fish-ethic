@@ -1,19 +1,44 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../components/Card';
-import {Avatar, Box, Center, FlatList, HStack, Stack, Text} from 'native-base';
-import {useTheme} from 'native-base';
-import {ScrollView} from 'react-native';
+import { Avatar, Box, Center, FlatList, HStack, Stack, Text } from 'native-base';
+import { useTheme } from 'native-base';
+import { ScrollView } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
 const HomeScreen = () => {
   const [events, setEvents] = useState();
   const [loading, setLoading] = useState();
+  const [oldEvents, setOldEvents] = useState([]);
 
-  // affichage de tous les évènements
+  // affichage les elements passer les évènements
   useEffect(() => {
     const allEvents = firestore()
       .collection('events')
+      .where('endAt', "<=", new Date())
+      .onSnapshot(
+        querySnapShot => {
+          const eventsArray = [];
+          querySnapShot.forEach(doc => {
+            eventsArray.push({
+              ...doc.data(),
+              id: doc.id,
+            });
+          });
+          setOldEvents(eventsArray);
+          setLoading(false);
+        },
+        error => {
+          console.log(error.message);
+        },
+      );
+    return () => allEvents();
+  }, []);
+  // affichage les elements futur les évènements
+  useEffect(() => {
+    const allEvents = firestore()
+      .collection('events')
+      .where('endAt', ">=", new Date())
       .onSnapshot(
         querySnapShot => {
           const eventsArray = [];
@@ -33,7 +58,8 @@ const HomeScreen = () => {
     return () => allEvents();
   }, []);
 
-  const renderItem = ({item}) => <Card props={item} />;
+
+  const renderItem = ({ item }) => <Card props={item} />;
 
   //theme
   const theme = useTheme();
@@ -50,7 +76,7 @@ const HomeScreen = () => {
           <Stack direction="row" space="3" mt="5">
             <FlatList
               horizontal={true}
-              data={events}
+              data={oldEvents}
               keyExtractor={item => item.id}
               renderItem={renderItem}
               ListEmptyComponent={() => (

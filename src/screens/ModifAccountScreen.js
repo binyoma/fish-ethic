@@ -50,11 +50,14 @@ import storage from '@react-native-firebase/storage';
 
 const validationSchema = yup.object({
     name: yup
-        .string(),
+        .string()
+        .required("Le nom est requis"),
     firstname: yup
-        .string(),
+        .string()
+        .required("Le prénom est requis"),
     pseudo: yup
-        .string(),
+        .string()
+        .required("Le pseudo est requis"),
     email: yup
         .string()
         .email('Merci une adresse mail valide')
@@ -156,7 +159,8 @@ const ModifAccountScreen = () => {
             values.level = level;
             values.fishing_techniques = fishing_techniques;
             handleUpdate(values);
-        },
+        }, validationSchema,
+
         enableReinitialize: true,
     });
     //recup data base de donnée au chargement de la page
