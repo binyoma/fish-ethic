@@ -59,7 +59,6 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   //theme
   const theme = useTheme();
-  console.log(navigation);
 
   const authenContext = useContext(AuthContext);
   const {setAuthenticated} = authenContext;
@@ -76,7 +75,7 @@ export default function LoginScreen() {
     touched,
   } = useFormik({
     initialValues: {
-      email: 'ddhuille@gmail.com',
+      email: 'jane@gmail.com',
       password: '123456',
     },
     onSubmit: values => login(values),
@@ -150,7 +149,6 @@ export default function LoginScreen() {
 
   const signInUserWithStoredData = async () => {
     try {
-      console.log('toto');
       const credentials = await Keychain.getGenericPassword();
       if (credentials) {
         login({email: credentials.username, password: credentials.password});
@@ -165,7 +163,7 @@ export default function LoginScreen() {
   const storeUserCredential = async (email, password) => {
     try {
       const credentials = await Keychain.getGenericPassword();
-      console.log(credentials);
+
       if (!credentials) {
         console.log('add new cred');
         await Keychain.setGenericPassword(email, password);
@@ -181,11 +179,13 @@ export default function LoginScreen() {
   return (
     <Center flex={'1'} bgColor="warmGray.5">
       <ScrollView w="full">
-        <Box w="95%" mx="auto" px="1">
-          <Heading size="lg">Content de vous revoir</Heading>
-          <Text my={'1.5'} color="muted.500">
-            Connectez-vous pour continuer
-          </Text>
+        <Box w="95%" mx="auto" px="1" mt="5">
+          <Center>
+            <Heading size="lg">Content de vous revoir</Heading>
+            <Text my={'1.5'} color="muted.500">
+              Connectez-vous pour continuer
+            </Text>
+          </Center>
           <VStack space={'2'}>
             <FormControl>
               <FormControl.Label>Email</FormControl.Label>
@@ -216,7 +216,6 @@ export default function LoginScreen() {
                     .catch(error => {
                       var errorCode = error.code;
                       var errorMessage = error.message;
-
                     });
                 }}
                 _text={{
@@ -228,7 +227,7 @@ export default function LoginScreen() {
                 Mot de passe oublié?
               </Link>
             </FormControl>
-            <Button onPress={handleSubmit} colorScheme="green">
+            <Button onPress={handleSubmit} bg={theme.colors.primary.green}>
               Se connecter
             </Button>
             <HStack justifyContent={'center'} mt="3">

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import {
   Text,
@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 const Card = props => {
   const item = props;
-  console.log(item, 'hello');
+
   const navigation = useNavigation();
   return (
     <Pressable onPress={() => navigation.navigate('MoreInfo', item)}>
@@ -48,6 +48,7 @@ const Card = props => {
             </Stack>
             <Stack>
               <Text fontWeight="400">{item?.props?.description}</Text>
+              <Text>Lieu: {item?.props?.place}</Text>
               <Text>
                 posté le:
                 {item?.props?.createdAt &&

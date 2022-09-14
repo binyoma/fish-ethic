@@ -1,19 +1,11 @@
 import {View, Text, Button, StyleSheet, Dimensions} from 'react-native';
 import React, {useState} from 'react';
-import {
-  Input,
-  VStack,
-  Box,
-  Icon,
-  HStack,
-  Select,
-  CheckIcon
-} from 'native-base';
+import {Input, VStack, Box, Icon, HStack, Select, CheckIcon} from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 const styles = StyleSheet.create({
   container: {
-    height:"100%",
+    height: '100%',
     width: Dimensions.get('screen').width,
     alignItems: 'center',
   },
@@ -26,27 +18,30 @@ const ResearchScreen = () => {
   const [searchBy, setSearchBy] = useState('');
 
   return (
-    <VStack >
+    <VStack>
       <Box h="5/6">
         <View style={styles.container}>
           <MapView
-            provider={PROVIDER_GOOGLE} 
+            provider={PROVIDER_GOOGLE}
             style={styles.map}
             region={{
               latitude: 37.78825,
               longitude: -122.4324,
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
-            }}></MapView>
+            }}
+          ></MapView>
         </View>
       </Box>
-      <Box h="1/6"
+      <Box
+        h="1/6"
         _dark={{
           bg: 'black',
         }}
         _light={{
           backgroundColor: 'green.700',
-        }}>
+        }}
+      >
         <VStack w="100%" space={5} alignSelf="center">
           <Input
             width="100%"
@@ -68,7 +63,8 @@ const ResearchScreen = () => {
                       endIcon: <CheckIcon size="5" />,
                     }}
                     mt={1}
-                    onValueChange={itemValue => setSearchBy(itemValue)}>
+                    onValueChange={itemValue => setSearchBy(itemValue)}
+                  >
                     <Select.Item label="Poisson" value="Poisson" />
                     <Select.Item label="Lieux" value="Lieu" />
                   </Select>

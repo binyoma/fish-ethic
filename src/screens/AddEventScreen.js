@@ -18,9 +18,8 @@ import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
  * Google firebase
  */
 
- import firestore from '@react-native-firebase/firestore';
- import auth from '@react-native-firebase/auth';
- 
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 const AddEventScreen = () => {
   // traitement formulaire
@@ -39,8 +38,8 @@ const AddEventScreen = () => {
   //création de ref sur les inputs des champs des dates
   const heureDebutInputRef = useRef(null);
   const heureFinInputRef = useRef(null);
-   // toast de notification de l'utilisateur
-   const toast = useToast();
+  // toast de notification de l'utilisateur
+  const toast = useToast();
 
   const validationSchema = Yup.object({
     title: Yup.string().required('Le titre est requis'),
@@ -98,7 +97,7 @@ const AddEventScreen = () => {
     resetForm,
   } = useFormik({
     initialValues: {
-      title:'',
+      title: '',
       place: '',
       startAt: null,
       startHour: null,
@@ -109,36 +108,26 @@ const AddEventScreen = () => {
     onSubmit: values => createEvent(values),
     validationSchema,
   });
-  // firestore 
-  const createEvent= values =>{
+  // firestore
+  const createEvent = values => {
     firestore()
       .collection('events')
       .add({
         ...values,
-        createdAt:firestore.FieldValue.serverTimestamp(),
-        user_id:auth().currentUser.uid,
-      }).then(async newAdvert => {
+        createdAt: firestore.FieldValue.serverTimestamp(),
+        user_id: auth().currentUser.uid,
+      })
+      .then(async newAdvert => {
         toast.show({
           description: 'Evenement crée avec succès !',
         });
         resetForm();
-  })
-  }
+      });
+  };
   return (
     <Center flex="1" bgColor="warmGray.5">
       <ScrollView w="full">
         <Box w="95%" mx="auto" px="1">
-          <Box
-            _dark={{
-              bg: 'black',
-            }}
-            _light={{
-              backgroundColor: 'green.700',
-            }}>
-            <Heading size={'lg'} color="white">
-              Ajout évenement
-            </Heading>
-          </Box>
           <FormControl isInvalid={touched.title && errors?.title}>
             <FormControl.Label>Titre</FormControl.Label>
             <Input
@@ -205,9 +194,7 @@ const AddEventScreen = () => {
               value={values.endAt?.toISOString()}
               onChangeText={handleChange('endAt')}
             />
-            <FormControl.ErrorMessage>
-              {errors?.endAt}
-            </FormControl.ErrorMessage>
+            <FormControl.ErrorMessage>{errors?.endAt}</FormControl.ErrorMessage>
           </FormControl>
           {showFinDatePicker &&
             DateTimePickerAndroid.open({
@@ -224,7 +211,9 @@ const AddEventScreen = () => {
               value={values.endHour?.toISOString()}
               onChangeText={handleChange('endHour')}
             />
-            <FormControl.ErrorMessage>{errors?.endHour}</FormControl.ErrorMessage>
+            <FormControl.ErrorMessage>
+              {errors?.endHour}
+            </FormControl.ErrorMessage>
           </FormControl>
           {showFinHeurePicker &&
             DateTimePickerAndroid.open({

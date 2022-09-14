@@ -12,6 +12,7 @@ import CustomHeader from '../components/CustomHeader';
 
 import MoreInfoScreen from '../screens/MoreInfoScreen';
 import HomeScreen from '../screens/HomeScreen';
+import ProfilScreen from '../screens/profilScreen';
 // react-navigation
 const Stack = createNativeStackNavigator();
 
@@ -25,14 +26,14 @@ export default function RootNavigation() {
           name="Login"
           component={LoginScreen}
           options={{
-            headerTitle: props => <CustomHeader {...props} />,
+            header: () => <CustomHeader />,
           }}
         />
         <Stack.Screen
           name="Registration"
           component={RegistrationScreen}
           options={{
-            headerTitle: props => <CustomHeader {...props} />,
+            header: () => <CustomHeader />,
           }}
         />
       </Stack.Group>
@@ -40,12 +41,18 @@ export default function RootNavigation() {
   ) : (
     <Stack.Navigator>
       <Stack.Group>
-        <Stack.Screen name="Welcome" component={TabNavigation} />
+        <Stack.Screen
+          name="Welcome"
+          options={{
+            headerShown: false,
+          }}
+          component={TabNavigation}
+        />
         <Stack.Screen
           name="MoreInfo"
           component={MoreInfoScreen}
           options={{
-            headerTitle: props => <CustomHeader {...props} />,
+            header: () => <CustomHeader />,
           }}
         />
       </Stack.Group>
