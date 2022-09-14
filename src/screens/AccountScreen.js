@@ -97,6 +97,7 @@ const AccountScreen = () => {
         },
         error => {
           console.log(error.massage);
+          console.log("erreur old");
         },
       );
     // Détacher un écouteur
@@ -122,8 +123,9 @@ const AccountScreen = () => {
           setevents(eventsArray);
           setLoading(false);
         },
-        error => {
+        (error) => {
           console.log(error.massage);
+          console.log("erreur old");
         },
       );
     return () => events();
