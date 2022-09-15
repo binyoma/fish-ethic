@@ -1,5 +1,5 @@
 import {StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   AspectRatio,
@@ -19,13 +19,12 @@ import 'dayjs/locale/fr';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // firebase
 import storage from '@react-native-firebase/storage';
-const getUrl=async ref=>{
-  return await ref.getDownloadURL();
-}
+
 
 const Card = props => {
   const [photoUrl, setPhotoUrl]=useState('');
   const item = props;
+  const url =item.props.url
 
   const navigation = useNavigation();
   
@@ -50,10 +49,10 @@ const Card = props => {
           >
             <Box>
               <AspectRatio w="100%" ratio={16 / 9}>
-                {/* { item?.props?.url ??
+                {/* { (url !=="undefined" ) ??
                 <Image
                   h="100%"
-                  source={{uri:item?.props?.url }}
+                  source={{uri:url }}
                   alt="image"
                 /> } */}
                 
