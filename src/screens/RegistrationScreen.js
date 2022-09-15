@@ -47,10 +47,14 @@ const validationSchema = yup.object({
   pseudo: yup
     .string()
     .required('Le pseudo est requis'),
+  Checkbox: yup
+    .boolean()
+    .oneOf([true], "Vous devez accepter les conditions générales"),
 });
 
 //import du theme
 import { useTheme } from 'native-base';
+import { useState } from 'react';
 
 export default function RegistrationScreen() {
   //theme
@@ -66,6 +70,7 @@ export default function RegistrationScreen() {
       password: '',
       confirmPassword: '',
       pseudo: '',
+      Checkbox: false,
     },
     onSubmit: values => signIn(values),
     validationSchema,
@@ -168,15 +173,30 @@ export default function RegistrationScreen() {
               </FormControl.ErrorMessage>
             </FormControl>
 
-            {/* ////////////////////////////////////////////////////////// */}
+            <FormControl mt="5" isInvalid={touched.pseudo && errors?.Checkbox}>
+              {console.log("log1", values.Checkbox)}
+              <Checkbox colorScheme="green" value={true} onChange={value => {
+                values.Checkbox = value;
+                console.log("log2", values.Checkbox);
+              }}>
+                <Link
+                  // remplacer navigation.goBack par la page des conditions générales
+                  onPress={() => navigation.goBack()}
+                  _text={{
+                    color: theme.colors.primary.green,
+                    fontWeight: 'medium',
+                    fontSize: 'sm',
+                  }}
+                >
+                  J'accèpte les conditions générales
+                </Link>
+              </Checkbox>
+              <FormControl.ErrorMessage>
+                {errors?.Checkbox}
+              </FormControl.ErrorMessage>
+            </FormControl>
 
-            <Checkbox value="red" size="sm" defaultIsChecked>
-              UX Research
-            </Checkbox>
-
-            {/* ////////////////////////////////////////////////////////// */}
-
-            <Button bg={theme.colors.primary.green} onPress={handleSubmit}>
+            <Button mt="5" bg={theme.colors.primary.green} onPress={handleSubmit}>
               S'inscrire
             </Button>
           </VStack>
@@ -200,6 +220,6 @@ export default function RegistrationScreen() {
           </Box>
         </Box>
       </ScrollView>
-    </Center>
+    </Center >
   );
 }
