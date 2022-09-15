@@ -10,10 +10,12 @@ import firestore from '@react-native-firebase/firestore';
 import Card from '../components/Card';
 // Hook React navigation pour accéder au context de la react-navigation
 import {useNavigation} from '@react-navigation/native';
+import {ActivityIndicator} from 'react-native';
 
-const ProfilScreen = props => {
+const ProfilUsersScreen = props => {
+  console.log(props.route.params, 'hello');
   const [user, setUser] = useState();
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(true);
 
   const navigation = useNavigation();
   const theme = useTheme();
@@ -21,7 +23,6 @@ const ProfilScreen = props => {
   //   recupération des données user
   useEffect(() => {
     const user_id = props.route.params.subscriber;
-
     if (!user) {
       firestore()
         .collection('users')
@@ -33,7 +34,9 @@ const ProfilScreen = props => {
     }
   }, []);
 
-  return (
+  return loading ? (
+    <ActivityIndicator />
+  ) : (
     <Center flex={'1'} bgColor="warmGray.5">
       <ScrollView w="full">
         <Box w="95%" mx="auto" px="1">
@@ -42,10 +45,7 @@ const ProfilScreen = props => {
               bg="green.500"
               mt="5"
               size="2xl"
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-              }}
+              source={{uri: user?.image}}
             >
               <Avatar.Badge
                 size="8"
@@ -111,4 +111,4 @@ const ProfilScreen = props => {
   );
 };
 
-export default ProfilScreen;
+export default ProfilUsersScreen;
