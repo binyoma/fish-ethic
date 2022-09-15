@@ -173,15 +173,21 @@ export default function RegistrationScreen() {
               </FormControl.ErrorMessage>
             </FormControl>
 
+
+
             <FormControl mt="5" isInvalid={touched.pseudo && errors?.Checkbox}>
               {console.log("log1", values.Checkbox)}
               <Checkbox colorScheme="green" value={true} onChange={value => {
                 values.Checkbox = value;
+
                 console.log("log2", values.Checkbox);
               }}>
+
+
+
                 <Link
                   // remplacer navigation.goBack par la page des conditions générales
-                  onPress={() => navigation.goBack()}
+                  onPress={() => navigation.navigate('TermsOfUseScreen')}
                   _text={{
                     color: theme.colors.primary.green,
                     fontWeight: 'medium',

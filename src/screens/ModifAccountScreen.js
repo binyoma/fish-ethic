@@ -323,6 +323,17 @@ const ModifAccountScreen = () => {
                         <Button colorScheme='green' onPress={handleSubmit}>
                             ENREGISTRER
                         </Button>
+                        {/* <Button colorScheme='red' onPress={
+                            auth().currentUser.delete().then(() => {
+                                // User deleted.
+                                logout();
+                            }).catch((error) => {
+                                // An error ocurred
+                                // ...
+                            })
+                        }>
+                            SUPPRIMER MON COMPTE FISHE ETIC
+                        </Button> */}
                         <Actionsheet isOpen={isOpen} onClose={onClose}>
                             <Actionsheet.Content>
                                 <Actionsheet.Item onPress={takePhoto} >Camera</Actionsheet.Item>
@@ -334,7 +345,7 @@ const ModifAccountScreen = () => {
                     </VStack>
                 </Box>
             </ScrollView>
-        </Center>
+        </Center >
     );
 }
 

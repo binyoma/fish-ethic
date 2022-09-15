@@ -1,15 +1,15 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/LoginScreen';
 import RegistrationScreen from '../screens/RegistrationScreen';
 import TabNavigation from './TabNavigation';
 // context - gestion d'un state partagé
-import {AuthContext} from '../contexts/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 // header personnalisé
 import CustomHeader from '../components/CustomHeader';
-
+import TermsOfUseScreen from '../screens/TermsOfUseScreen';
 import MoreInfoScreen from '../screens/MoreInfoScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ModifEventScreen from '../screens/ModifEventScreen';
@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 
 export default function RootNavigation() {
   const authContext = useContext(AuthContext);
-  const {authenticated} = authContext;
+  const { authenticated } = authContext;
   return !authenticated ? (
     <Stack.Navigator>
       <Stack.Group>
@@ -33,6 +33,13 @@ export default function RootNavigation() {
         <Stack.Screen
           name="Registration"
           component={RegistrationScreen}
+          options={{
+            header: () => <CustomHeader />,
+          }}
+        />
+        <Stack.Screen
+          name="TermsOfUseScreen"
+          component={TermsOfUseScreen}
           options={{
             header: () => <CustomHeader />,
           }}
