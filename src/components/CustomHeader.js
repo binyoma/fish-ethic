@@ -108,17 +108,6 @@ const CustomHeader = () => {
           </Text>
         </Center>
       </HStack>
-      <Input
-        placeholder="Search"
-        width="100%"
-        borderRadius="4"
-        py="3"
-        px="1"
-        fontSize="14"
-        InputLeftElement={
-          <Icon m="2" ml="3" size="6" as={<Ionicons name="search" />} />
-        }
-      />
     </Box>
   ) : route.name == 'Add' ? (
     <Box>

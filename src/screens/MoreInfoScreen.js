@@ -144,7 +144,7 @@ const MoreInfoScreen = props => {
                 return (
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate('profil', {subscriber: item.id});
+                      navigation.navigate('profilUsers', {subscriber: item.id});
                     }}
                   >
                     <Text> {item.pseudo}|</Text>

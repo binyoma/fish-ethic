@@ -57,16 +57,16 @@ const AddEventScreen = () => {
     title: Yup.string().required('Le titre est requis'),
     place: Yup.string().required('Le lieu est requis'),
     startAt: Yup.date()
-      .typeError("La valeur renseigné n'est pas une date valide")
+      .typeError("La valeur renseignée n'est pas une date valide")
       .required('La date de début est requise'),
     startHour: Yup.date()
-      .typeError("La valeur renseigné n'est pas valide")
+      .typeError("La valeur renseignée n'est pas valide")
       .required("L'heure de début est requise"),
     endAt: Yup.date()
-      .typeError("La valeur renseigné n'est pas une date valide")
+      .typeError("La valeur renseignée n'est pas une date valide")
       .required('La date de fin est requise'),
     endHour: Yup.date()
-      .typeError("La valeur renseigné n'est pas valide")
+      .typeError("La valeur renseignée n'est pas valide")
       .required("L'heure de début est requise"),
     description: Yup.string().required('La description est réquise'),
   });
@@ -245,7 +245,7 @@ const AddEventScreen = () => {
           <FormControl isInvalid={touched.title && errors?.title}>
             <FormControl.Label>Titre</FormControl.Label>
             <Input
-              placeholder="Indiquer le titre"
+              placeholder="Indiquez le titre"
               value={values.title}
               onChangeText={handleChange('title')}
             />
@@ -275,7 +275,12 @@ const AddEventScreen = () => {
               </Center>
             ) : uploadedPhoto == 3 ? (
               <Center>
-                <Image source={{uri: values.url}} size="2xl"  alt="image de l'évenement" margin={2}/>
+                <Image
+                  source={{uri: values.url}}
+                  size="2xl"
+                  alt="image de l'évenement"
+                  margin={2}
+                />
                 <FormControl.Label>Modifier la photo</FormControl.Label>
                 <Pressable onPress={onOpen}>
                   <Center>
@@ -295,7 +300,7 @@ const AddEventScreen = () => {
           <FormControl isInvalid={touched.place && errors?.place}>
             <FormControl.Label>Lieu</FormControl.Label>
             <Input
-              placeholder="Indiquer le lieu"
+              placeholder="Indiquez le lieu"
               value={values.place}
               onChangeText={handleChange('place')}
             />

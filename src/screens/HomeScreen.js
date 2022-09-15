@@ -1,21 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Card from '../components/Card';
-import { Avatar, Box, Center, FlatList, HStack, Stack, Text } from 'native-base';
-import { useTheme } from 'native-base';
-import { ScrollView } from 'react-native';
+import {
+  Avatar,
+  Box,
+  Center,
+  FlatList,
+  HStack,
+  Stack,
+  Text,
+  VStack,
+} from 'native-base';
+import {useTheme} from 'native-base';
+import {ScrollView, TouchableOpacity} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import {date} from 'yup/lib/locale';
+import {useNavigation} from '@react-navigation/native';
 
 const HomeScreen = () => {
   const [events, setEvents] = useState();
   const [loading, setLoading] = useState();
   const [oldEvents, setOldEvents] = useState([]);
-
+  const [users, setUsers] = useState();
+  const navigation = useNavigation();
   // affichage les elements passer les évènements
   useEffect(() => {
     const allEvents = firestore()
       .collection('events')
-      .where('endAt', "<=", new Date())
+      .where('endAt', '<=', new Date())
       .onSnapshot(
         querySnapShot => {
           const eventsArray = [];
@@ -38,7 +50,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const allEvents = firestore()
       .collection('events')
-      .where('endAt', ">=", new Date())
+      .where('endAt', '>=', new Date())
       .onSnapshot(
         querySnapShot => {
           const eventsArray = [];
@@ -58,11 +70,55 @@ const HomeScreen = () => {
     return () => allEvents();
   }, []);
 
+  // affichage des dernieres inscriptions
+  useEffect(() => {
+    let toDay = new Date();
+    let toDaymoinsdeux = toDay.setDate(toDay.getDate() - 2);
+    let newMember = new Date(toDaymoinsdeux);
 
-  const renderItem = ({ item }) => <Card props={item} />;
+    const allAvatar = firestore()
+      .collection('users')
+      .onSnapshot(
+        querySnapShot => {
+          const usersArray = [];
+          querySnapShot.forEach(doc => {
+            if (new Date(doc.data().createdAt.seconds * 1000) >= newMember) {
+              usersArray.push({
+                ...doc.data(),
+                id: doc.id,
+              });
+            }
+          });
+          setUsers(usersArray);
+          setLoading(false);
+        },
+        error => {
+          console.log(error.message);
+        },
+      );
+    return () => allAvatar();
+  }, []);
+
+  // renderitem affichage des sortie
+  const renderItemCards = ({item}) => <Card props={item} />;
+
+  // renderitem affichage des avatar
+  const renderItemAvatar = ({item}) => (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('profilUsers', {subscriber: item.id});
+      }}
+    >
+      <VStack>
+        <Avatar m="2" bg="green.500" size="lg" source={{uri: item?.image}} />
+        <Text textAlign="center">{item?.pseudo}</Text>
+      </VStack>
+    </TouchableOpacity>
+  );
 
   //theme
   const theme = useTheme();
+
   return loading ? (
     <ActivityIndicator />
   ) : (
@@ -78,7 +134,7 @@ const HomeScreen = () => {
               horizontal={true}
               data={oldEvents}
               keyExtractor={item => item.id}
-              renderItem={renderItem}
+              renderItem={renderItemCards}
               ListEmptyComponent={() => (
                 <Text my="5">Pas de sortie aujour'hui !</Text>
               )}
@@ -88,90 +144,19 @@ const HomeScreen = () => {
         <Center mt="5">
           <Text>BIENVENUE A NOS NOUVEAUX MEMBRES</Text>
         </Center>
-        <ScrollView horizontal={true}>
-          <HStack space={2} mt="5">
-            <Avatar
-              bg="green.500"
-              size="lg"
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-              }}
-            >
-              AJ
-            </Avatar>
-            <Avatar
-              size="lg"
-              bg="cyan.500"
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-              }}
-            >
-              TE
-            </Avatar>
-            <Avatar
-              size="lg"
-              bg="indigo.500"
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-              }}
-            >
-              JB
-            </Avatar>
-            <Avatar
-              size="lg"
-              bg="amber.500"
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-              }}
-            >
-              TS
-            </Avatar>
-            <Avatar
-              size="lg"
-              bg="indigo.500"
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-              }}
-            >
-              JB
-            </Avatar>
-            <Avatar
-              size="lg"
-              bg="amber.500"
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-              }}
-            >
-              TS
-            </Avatar>
-            <Avatar
-              size="lg"
-              bg="green.500"
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-              }}
-            >
-              AJ
-            </Avatar>
-            <Avatar
-              size="lg"
-              bg="cyan.500"
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-              }}
-            >
-              TE
-            </Avatar>
-          </HStack>
-        </ScrollView>
+
+        <HStack space={2} mt="5">
+          <FlatList
+            horizontal={true}
+            data={users}
+            keyExtractor={item => item.id}
+            renderItem={renderItemAvatar}
+            ListEmptyComponent={() => (
+              <Text my="5">Pas de nouveaux membres aujour'hui !</Text>
+            )}
+          />
+        </HStack>
+
         <Box mt="5">
           <Center>
             <Text>LES SORTIES A VENIR</Text>
@@ -182,7 +167,7 @@ const HomeScreen = () => {
               horizontal={true}
               data={events}
               keyExtractor={item => item.id}
-              renderItem={renderItem}
+              renderItem={renderItemCards}
             />
           </Stack>
         </Box>
