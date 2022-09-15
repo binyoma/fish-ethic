@@ -78,7 +78,8 @@ const MoreInfoScreen = props => {
   };
   // utilisation du theme
   const theme = useTheme();
-
+  const publisherId = item.props.user_id;
+  const currentUserId = auth().currentUser.uid;
   return loading ? (
     <ActivityIndicator />
   ) : (
@@ -155,18 +156,34 @@ const MoreInfoScreen = props => {
               <Text>"Il n'y a pas de participants pour l'instant!"</Text>
             )}
           </Stack>
-
-          <Button
-            onPress={() => {
-              subscribEvent();
-            }}
-            mt="5"
-            ml="1"
-            mr="1"
-            bg={theme.colors.primary.green}
-          >
-            S'INSCRIRE
-          </Button>
+          {publisherId == currentUserId ? (
+            <Button
+              onPress={() => {
+                subscribEvent();
+              }}
+              mt="5"
+              ml="1"
+              mr="1"
+              bg={theme.colors.primary.green}
+            >
+              S'INSCRIRE
+            </Button>
+          ) : (
+            <Box>
+              <Button
+                m="3"
+                bg={theme.colors.primary.green}
+                onPress={() => {
+                  navigation.navigate('Modification évenement', item);
+                }}
+              >
+                MODIFIER
+              </Button>
+              <Button m="3" bg={theme.colors.primary.green}>
+                SUPPRIMER
+              </Button>
+            </Box>
+          )}
         </Stack>
       </Box>
     </ScrollView>

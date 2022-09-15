@@ -1,6 +1,16 @@
 import React, {useEffect, useState} from 'react';
 // NATIVE BASE
-import {Box, Center, Text, Avatar, ScrollView, Stack, Link} from 'native-base';
+import {
+  Box,
+  Center,
+  Text,
+  Avatar,
+  ScrollView,
+  Stack,
+  Link,
+  FlatList,
+  useColorModeValue,
+} from 'native-base';
 //import du theme
 import {useTheme, Divider} from 'native-base';
 // react-native-vector-icons
@@ -13,10 +23,10 @@ import {useNavigation} from '@react-navigation/native';
 import {ActivityIndicator} from 'react-native';
 
 const ProfilUsersScreen = props => {
-  console.log(props.route.params, 'hello');
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
-
+  const [lastEvents, setLastEvents] = useState();
+  const [nextEvents, setNextEvents] = useState();
   const navigation = useNavigation();
   const theme = useTheme();
 
@@ -34,6 +44,58 @@ const ProfilUsersScreen = props => {
     }
   }, []);
 
+  // affichages des dernieres sorties du user
+  useEffect(() => {
+    const user_id = props.route.params.subscriber;
+    const lastEvents = firestore()
+      .collection('events')
+      .where('user_id', '==', user_id)
+      .where('endAt', '>=', new Date())
+      .onSnapshot(
+        querySnapshot => {
+          const lastEventsArray = [];
+          querySnapshot.forEach(doc => {
+            lastEventsArray.push({
+              ...doc.data(),
+              id: doc.id,
+            });
+          });
+          setLastEvents(lastEventsArray);
+          setLoading(false);
+        },
+        error => {
+          console.log(error.massage);
+        },
+      );
+    return () => lastEvents();
+  }, []);
+  // affichage des prochaines sorties du user
+  useEffect(() => {
+    const user_id = props.route.params.subscriber;
+    const nextEvents = firestore()
+      .collection('events')
+      .where('user_id', '==', user_id)
+      .where('endAt', '<=', new Date())
+      .onSnapshot(
+        querySnapshot => {
+          const nextEventsArray = [];
+          querySnapshot.forEach(doc => {
+            nextEventsArray.push({
+              ...doc.data(),
+              id: doc.id,
+            });
+          });
+          setNextEvents(nextEventsArray);
+          setLoading(false);
+        },
+        error => {
+          console.log(error.massage);
+        },
+      );
+    return () => nextEvents();
+  }, []);
+
+  const renderItem = ({item}) => <Card props={item} />;
   return loading ? (
     <ActivityIndicator />
   ) : (
@@ -83,27 +145,45 @@ const ProfilUsersScreen = props => {
           </Box>
           <Box>
             <Center>
-              <Text color="muted.50">MES PRECEDENTES SORTIES</Text>
+              <Text
+                color={useColorModeValue(theme.colors.primary.green, 'white')}
+              >
+                PRECEDENTES SORTIES
+              </Text>
             </Center>
-            <ScrollView horizontal={true}>
-              <Stack direction="row" space="3" mt="5">
-                <Card />
-                <Card />
-                <Card />
-              </Stack>
-            </ScrollView>
+
+            <Stack direction="row" space="3" mt="5">
+              <FlatList
+                horizontal={true}
+                data={lastEvents}
+                keyExtractor={item => item.id}
+                renderItem={renderItem}
+                ListEmptyComponent={() => (
+                  <Text my="5">Aucun evenement trouvé !</Text>
+                )}
+              />
+            </Stack>
           </Box>
           <Box mt="5">
             <Center>
-              <Text color="muted.50">MES SORTIES A VENIR</Text>
+              <Text
+                color={useColorModeValue(theme.colors.primary.green, 'white')}
+              >
+                SORTIES A VENIR
+              </Text>
             </Center>
-            <ScrollView horizontal={true}>
-              <Stack direction="row" space="3" mt="5">
-                <Card />
-                <Card />
-                <Card />
-              </Stack>
-            </ScrollView>
+
+            <Stack direction="row" space="3" mt="5">
+              <FlatList
+                horizontal={true}
+                data={nextEvents}
+                keyExtractor={item => item.id}
+                renderItem={renderItem}
+                ListEmptyComponent={() => (
+                  <Text my="5">Aucun evenement trouvé !</Text>
+                )}
+              />
+            </Stack>
           </Box>
         </Box>
       </ScrollView>
