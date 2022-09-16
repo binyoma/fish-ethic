@@ -270,7 +270,7 @@ const AddEventScreen = () => {
               </Center>
             ) : uploadedPhoto == 2 ? (
               <Center>
-                <FormControl.Label>Ajout encours</FormControl.Label>
+                <FormControl.Label>Ajout en cours</FormControl.Label>
                 <ActivityIndicator />
                 <FormControl.ErrorMessage>
                   {errors?.url}

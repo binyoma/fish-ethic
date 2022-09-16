@@ -41,14 +41,19 @@ const MoreInfoScreen = props => {
   }, []);
   useEffect(() => {
     if (item.props.subscriber) {
-      item.props.subscriber.map(async item => {
-        const user = await firestore().collection('users').doc(item).get();
-        let data = [{pseudo: user.data().pseudo, id: item}];
-        setSubscriber(data);
+      let data = [];
+      item.props.subscriber.map(async (id, index) => {
+        const user = await firestore().collection('users').doc(id).get();
+        if (user) {
+          data.push({pseudo: user.data().pseudo, id: id});
+          if (item.props.subscriber.length - 1 === index) {
+            setSubscriber(data);
+          }
+        }
       });
     }
   }, [loading]);
-
+  console.log(subscriber);
   // inscription à une sortie
   const subscribEvent = async () => {
     const event = await firestore()
@@ -89,7 +94,7 @@ const MoreInfoScreen = props => {
         <Box>
           <AspectRatio w="100%" ratio={16 / 9}>
             <Image
-              source={require('../assets/fish2.jpg')}
+              source={{uri: item?.props?.url}}
               alt="peche"
               h="100%"
               resizeMode="cover"
@@ -141,21 +146,29 @@ const MoreInfoScreen = props => {
 
           <Stack m="2">
             <Text>Participants:</Text>
-            {subscriber.length != 0 ? (
-              subscriber.map(item => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('profilUsers', {subscriber: item.id});
-                    }}
-                  >
-                    <Text> {item.pseudo}|</Text>
-                  </TouchableOpacity>
-                );
-              })
-            ) : (
-              <Text>"Il n'y a pas de participants pour l'instant!"</Text>
-            )}
+            <HStack>
+              {subscriber.length != 0 ? (
+                subscriber.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        navigation.navigate('profilUsers', {
+                          subscriber: item.id,
+                        });
+                      }}
+                    >
+                      <Text>
+                        {item.pseudo}{' '}
+                        {index == subscriber.length - 1 ? null : ' | '}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })
+              ) : (
+                <Text>"Il n'y a pas de participants pour l'instant!"</Text>
+              )}
+            </HStack>
           </Stack>
           {publisherId != currentUserId ? (
             <Button

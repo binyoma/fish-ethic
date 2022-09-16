@@ -1,5 +1,5 @@
-import {View, Text} from 'react-native';
-import React, {useRef, useState} from 'react';
+import {View, Text, ActivityIndicator} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Actionsheet,
   Box,
@@ -7,7 +7,9 @@ import {
   Center,
   FormControl,
   HStack,
+  Image,
   Input,
+  Link,
   Pressable,
   ScrollView,
   useColorModeValue,
@@ -26,10 +28,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import uuid from 'react-native-uuid';
+import {useNavigation} from '@react-navigation/native';
 const ModifEventScreen = props => {
   const item = props.route.params;
   const data = item.props;
-
+  const navigation = useNavigation();
   // traitement formulaire
   // gestion de l'affichage des pickers de date
   const [showDebutDatePicker, setShowDebutDatePicker] = useState(false);
@@ -110,41 +113,60 @@ const ModifEventScreen = props => {
     dirty,
     resetForm,
   } = useFormik({
+    enableReinitialize: true,
     initialValues: {
       title: data?.title,
       place: data?.place,
-      startAt: data?.startAt,
-      startHour: data?.startHour,
-      endAt: data?.endAt,
-      endHour: data?.endHour,
+      startAt: data?.startAt.toDate(),
+      startHour: data?.startHour.toDate(),
+      endAt: data?.endAt.toDate(),
+      endHour: data?.endHour.toDate(),
       description: data?.description,
+      url: data?.url,
     },
-    onSubmit: values => console.log(values),
+    onSubmit: values => handleUpdate(values),
     validationSchema,
   });
-  // firestore
-  //   const createEvent = values => {
-  //     firestore()
-  //       .collection('events')
-  //       .add({
-  //         ...values,
-  //         createdAt: firestore.FieldValue.serverTimestamp(),
-  //         user_id: auth().currentUser.uid,
-  //       })
-  //       .then(async newAdvert => {
-  //         toast.show({
-  //           description: 'Evenement crée avec succès !',
-  //         });
-  //         resetForm();
-  //       });
-  //   };
-  const {isOpen, onOpen, onClose} = useDisclose();
 
+  // modification
+
+  const handleUpdate = values => {
+    console.log(item);
+    firestore()
+      .collection('events')
+      .doc(item.props.id)
+      .update({
+        ...values,
+        updatedAt: firestore.FieldValue.serverTimestamp(),
+      })
+      .then(updatedUser => {
+        console.log('====================================');
+        console.log('events updated !');
+        console.log('====================================');
+        toast.show({
+          duration: 3000,
+          title: 'sortie modifiée',
+          placement: 'bottom',
+        });
+        setTimeout(() => {
+          navigation.navigate('Home');
+        }, 3500);
+      })
+      .catch(e => {
+        console.log('====================================');
+        console.log(e.message);
+        console.log('====================================');
+      });
+  };
+  // gestion de la photo
+  const {isOpen, onOpen, onClose} = useDisclose();
+  const [uploadedPhoto, setUploadedPhoto] = useState(3);
+  const [initialValues, setInitialValues] = useState();
   const takePhoto = async () => {
     let options = {
       mediaType: 'photo',
-      maxWidth: 200,
-      maxHeight: 200,
+      maxWidth: 500,
+      maxHeight: 500,
       quality: 0.5,
       includeBase64: true,
       saveToPhotos: true,
@@ -155,29 +177,28 @@ const ModifEventScreen = props => {
 
     if (didCancel) {
       console.log('====================================');
-      console.log("prise de photo annulée par l'utilisateur");
+      console.log("prise de photo annulé par l'utilisateur");
       toast.show({
-        title: "Prise de photo annulée par l'utilisateur",
+        title: "Prise de photo annulé par l'utilisateur",
         placement: 'bottom',
       });
       console.log('====================================');
     } else if (errorCode) {
-      console.log('====================================');
+      console.log('coucou====================================');
       console.log(errorMessage);
       console.log('====================================');
     } else {
       const img = assets[0];
-      console.log('photo ok');
+      console.log(img);
       uploadPhoto(img);
     }
   };
-
   const getPhotoFromStorage = async () => {
     const response = await launchImageLibrary(options);
     let options = {
       mediaType: 'photo',
-      maxWidth: 200,
-      maxHeight: 200,
+      maxWidth: 500,
+      maxHeight: 500,
       quality: 0.5,
       includeBase64: true,
       saveToPhotos: true,
@@ -187,41 +208,60 @@ const ModifEventScreen = props => {
 
     if (didCancel) {
       console.log('====================================');
-      console.log("prise de photo annulée par l'utilisateur");
+      console.log("prise de photo annulé par l'utilisateur");
       toast.show({
-        title: "Prise de photo annulée par l'utilisateur",
+        title: "Prise de photo annulé par l'utilisateur",
         placement: 'bottom',
       });
       console.log('====================================');
     } else if (errorCode) {
-      console.log('====================================');
+      console.log('coucou ====================================');
       console.log(errorMessage);
       console.log('====================================');
     } else {
       const img = assets[0];
-      console.log('photo ok');
+      console.log(img);
       uploadPhoto(img);
     }
   };
 
+  useEffect(() => {
+    firestore()
+      .collection('events')
+      .doc(item.id)
+      .get()
+      .then(docSnap => {
+        const data = docSnap.data();
+
+        setInitialValues({
+          title: data ? data['title'] : null,
+          description: data ? data['description'] : null,
+          startAt: data ? data['startAt'] : null,
+          endAt: data ? data['endAt'] : null,
+          startHour: data ? data['startHour'] : null,
+          endHour: data ? data['endHour'] : null,
+          url: data ? data['url'] : null,
+        });
+      });
+  }, []);
   const uploadPhoto = async img => {
     // on crée une référence pour l'image que le souhaite update avec son nom de stockage
-
-    const reference = storage().ref(`${uuid.v4()}.jpg`);
-    reference.putFile(img.uri).then(() => {
+    const avatarRef = storage().ref(`pict-${uuid.v4()}.jpg`);
+    avatarRef.putFile(img.uri).then(() => {
       console.log('====================================');
       console.log('image uploaded to the bucket');
       console.log('====================================');
-      reference.getDownloadURL().then(url => {
-        setFieldValue('url', url);
-        console.log(url);
-      });
       toast.show({
-        title: 'Photo uploaded',
+        title: 'Photo modifiée',
         placement: 'bottom',
+      });
+
+      avatarRef.getDownloadURL().then(url => {
+        setFieldValue('url', url);
       });
     });
   };
+
   return (
     <Center flex="1" bgColor="warmGray.5">
       <ScrollView w="full">
@@ -234,6 +274,27 @@ const ModifEventScreen = props => {
               onChangeText={handleChange('title')}
             />
             <FormControl.ErrorMessage>{errors?.title}</FormControl.ErrorMessage>
+          </FormControl>
+          <FormControl isInvalid={touched.url && errors?.url}>
+            <Center>
+              <Image
+                source={{uri: values?.url}}
+                size="2xl"
+                alt="image de l'évenement"
+                margin={2}
+              />
+              <FormControl.Label>Modifier la photo</FormControl.Label>
+              <Pressable onPress={onOpen}>
+                <Center>
+                  <Ionicons
+                    name="camera-sharp"
+                    size={40}
+                    color={useColorModeValue('#000', '#FFF')}
+                  />
+                </Center>
+              </Pressable>
+              <FormControl.ErrorMessage>{errors?.url}</FormControl.ErrorMessage>
+            </Center>
           </FormControl>
           <FormControl isInvalid={touched.place && errors?.place}>
             <FormControl.Label>Lieu</FormControl.Label>
@@ -252,11 +313,7 @@ const ModifEventScreen = props => {
                   onFocus={() => setShowDebutDatePicker(true)}
                   showSoftInputOnFocus={false}
                   ref={dateDebutInputRef}
-                  value={
-                    touched.startAt
-                      ? values.startAt.toLocaleDateString()
-                      : values.startAt.toDate().toLocaleDateString()
-                  }
+                  value={values.startAt.toLocaleDateString()}
                 />
                 <FormControl.ErrorMessage>
                   {errors?.startAt}
@@ -276,11 +333,7 @@ const ModifEventScreen = props => {
                   onFocus={() => setShowDebutHeurePicker(true)}
                   showSoftInputOnFocus={false}
                   ref={heureDebutInputRef}
-                  value={
-                    touched.startHour
-                      ? values.startHour.toLocaleTimeString()
-                      : values.startHour.toDate().toLocaleTimeString()
-                  }
+                  value={values.startHour.toLocaleTimeString()}
                 />
                 <FormControl.ErrorMessage>
                   {errors?.startHour}
@@ -310,11 +363,7 @@ const ModifEventScreen = props => {
                   onFocus={() => setShowFinDatePicker(true)}
                   showSoftInputOnFocus={false}
                   ref={dateFinInputRef}
-                  value={
-                    touched.endAt
-                      ? values.endAt.toLocaleDateString()
-                      : values.endAt.toDate().toLocaleDateString()
-                  }
+                  value={values.endAt.toLocaleDateString()}
                 />
                 <FormControl.ErrorMessage>
                   {errors?.endAt}
@@ -334,11 +383,7 @@ const ModifEventScreen = props => {
                   onFocus={() => setShowFinHeurePicker(true)}
                   showSoftInputOnFocus={false}
                   ref={heureFinInputRef}
-                  value={
-                    touched.endHour
-                      ? values.endHour.toLocaleTimeString()
-                      : values.endHour.toDate().toLocaleTimeString()
-                  }
+                  value={values.endHour.toLocaleTimeString()}
                 />
                 <FormControl.ErrorMessage>
                   {errors?.endHour}
@@ -350,6 +395,7 @@ const ModifEventScreen = props => {
                   value: new Date(),
                   onChange: heureFinChange,
                 })}
+
               <Actionsheet isOpen={isOpen} onClose={onClose}>
                 <Actionsheet.Content>
                   <Actionsheet.Item onPress={takePhoto}>
@@ -362,17 +408,9 @@ const ModifEventScreen = props => {
               </Actionsheet>
             </Center>
           </HStack>
-          <Pressable onPress={onOpen}>
-            <Center>
-              <Ionicons
-                name="camera-sharp"
-                size={40}
-                color={useColorModeValue('#000', '#FFF')}
-              />
-            </Center>
-          </Pressable>
+          <Pressable onPress={onOpen}></Pressable>
           <Button colorScheme="green" onPress={handleSubmit} margin="5">
-            Publier
+            Modifier
           </Button>
         </Box>
       </ScrollView>

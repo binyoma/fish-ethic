@@ -126,7 +126,6 @@ const ProfilUsersScreen = props => {
 
             <Divider my={2} mt="5" />
 
-            {/* ajouter icon email */}
             <Link href="mailTo:paulinegallezot@gmail.com">
               <Text mt="5">
                 <Ionicons name="ios-mail-sharp" size={10} /> {user.email}
