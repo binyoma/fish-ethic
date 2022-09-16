@@ -47,6 +47,8 @@ const validationSchema = yup.object({
   pseudo: yup
     .string()
     .required('Le pseudo est requis'),
+
+
   Checkbox: yup
     .boolean()
     .oneOf([true], "Vous devez accepter les conditions générales"),
@@ -71,7 +73,7 @@ export default function RegistrationScreen() {
     pseudo: '',
     Checkbox: false,
   })
-  const { values, handleChange, handleSubmit, errors, touched } = useFormik({
+  const { values, handleChange, handleSubmit, errors, touched, setFieldValue } = useFormik({
     initialValues,
     onSubmit: values => signIn(values),
     validationSchema,
@@ -178,12 +180,11 @@ export default function RegistrationScreen() {
 
               {console.log("log1", values.Checkbox)}
 
-              <Checkbox colorScheme="green" value={true} onChange={value => {
-                values.Checkbox = value;
+              <Checkbox colorScheme="green" value={values.Checkbox} onChange={value => {
+                // values.Checkbox = value;
+                setFieldValue("Checkbox", !values.Checkbox)
 
-                //setInitialValues({ Checkbox: value });
-
-                console.log("log2", initialValues.Checkbox);
+                console.log("log2", values.Checkbox);
               }}>
 
                 <Link

@@ -320,20 +320,34 @@ const ModifAccountScreen = () => {
                                 <Ionicons name="camera-sharp" size={40} color={useColorModeValue("#000", "#FFF")} />
                             </Center>
                         </Pressable>
+
                         <Button colorScheme='green' onPress={handleSubmit}>
                             ENREGISTRER
                         </Button>
-                        <Button colorScheme='red' onPress={
+
+                        <Button colorScheme='red' onPress={() => {
+                            const user_id = auth().currentUser.uid;
+                            const del = firestore()
+                                .collection("events")
+                                .where('user_id', '==', user_id)
+                                .delete()
+                                .then(() => {
+                                    console.log("Document successfully deleted!");
+                                }).catch((error) => {
+                                    console.error("Error removing document: ", error);
+                                });
                             auth().currentUser.delete().then(() => {
                                 // User deleted.
-                                logout();
+                                // logout();
                             }).catch((error) => {
                                 // An error ocurred
                                 // ...
                             })
-                        }>
+                        }}>
                             SUPPRIMER MON COMPTE FISHE ETIC
                         </Button>
+
+
                         <Actionsheet isOpen={isOpen} onClose={onClose}>
                             <Actionsheet.Content>
                                 <Actionsheet.Item onPress={takePhoto} >Camera</Actionsheet.Item>
