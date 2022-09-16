@@ -64,14 +64,15 @@ export default function RegistrationScreen() {
   // Toast de notification
   const toast = useToast();
   // Récupération des props useFormik
+  const [initialValues, setInitialValues] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    pseudo: '',
+    Checkbox: false,
+  })
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-      confirmPassword: '',
-      pseudo: '',
-      Checkbox: false,
-    },
+    initialValues,
     onSubmit: values => signIn(values),
     validationSchema,
   });
@@ -173,20 +174,15 @@ export default function RegistrationScreen() {
               </FormControl.ErrorMessage>
             </FormControl>
 
-
-
-            <FormControl mt="5" isInvalid={touched.pseudo && errors?.Checkbox}>
+            <FormControl mt="5" isInvalid={errors?.Checkbox}>
               {console.log("log1", values.Checkbox)}
-              <Checkbox colorScheme="green" value={true} onChange={value => {
+              <Checkbox colorScheme="green" value={true || false} onChange={value => {
                 values.Checkbox = value;
+                // setInitialValues({ Checkbox: value });
 
-                console.log("log2", values.Checkbox);
+                console.log("log2", initialValues.Checkbox);
               }}>
-
-
-
                 <Link
-                  // remplacer navigation.goBack par la page des conditions générales
                   onPress={() => navigation.navigate('TermsOfUseScreen')}
                   _text={{
                     color: theme.colors.primary.green,
