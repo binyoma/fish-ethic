@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState, TouchableOpacity} from 'react';
+import React, { useContext, useEffect, useState, TouchableOpacity } from 'react';
 // NATIVE BASE
 import {
   Box,
@@ -20,20 +20,20 @@ import {
   useColorModeValue,
 } from 'native-base';
 //import du theme
-import {useTheme} from 'native-base';
+import { useTheme } from 'native-base';
 
 // import {auth, db} from '../firebase/config';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 // react-native-vector-icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // formik
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 // camera
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 /******************************************************************
  * FIREBASE
  *****************************************************************/
@@ -60,7 +60,7 @@ const validationSchema = yup.object({
 
 const ModifAccountScreen = () => {
   //camera
-  const {isOpen, onOpen, onClose} = useDisclose();
+  const { isOpen, onOpen, onClose } = useDisclose();
   const takePhoto = async () => {
     let options = {
       mediaType: 'photo',
@@ -71,7 +71,7 @@ const ModifAccountScreen = () => {
     };
     const response = await launchCamera(options);
 
-    const {didCancel, errorCode, errorMessage, assets} = response;
+    const { didCancel, errorCode, errorMessage, assets } = response;
 
     if (didCancel) {
       console.log('====================================');
@@ -102,7 +102,7 @@ const ModifAccountScreen = () => {
       saveToPhotos: true,
     };
 
-    const {didCancel, errorCode, errorMessage, assets} = response;
+    const { didCancel, errorCode, errorMessage, assets } = response;
 
     if (didCancel) {
       console.log('====================================');
@@ -145,7 +145,7 @@ const ModifAccountScreen = () => {
     fishing_techniques: '',
   });
 
-  const {values, handleChange, handleSubmit, touched, errors} = useFormik({
+  const { values, handleChange, handleSubmit, touched, errors } = useFormik({
     initialValues,
     onSubmit: values => {
       //on ajoute les valeurs des picker dans values de formique avant l'envoie en base de donnée
@@ -229,7 +229,7 @@ const ModifAccountScreen = () => {
       });
 
       avatarRef.getDownloadURL().then(url => {
-        handleUpdate({image: url});
+        handleUpdate({ image: url });
         auth().currentUser.updateProfile({
           photoURL: url,
         });

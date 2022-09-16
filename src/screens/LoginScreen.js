@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // NATIVE BASE
 import {
   Box,
@@ -15,7 +15,7 @@ import {
   useToast,
 } from 'native-base';
 //import du theme
-import {useTheme} from 'native-base';
+import { useTheme } from 'native-base';
 
 // faire disparaitre les warnings
 LogBox.ignoreLogs([
@@ -23,7 +23,7 @@ LogBox.ignoreLogs([
 ]);
 
 // Hook React navigation pour accéder au context de la react-navigation
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 // stockage
 import AsyncStorage from '@react-native-async-storage/async-storage';
 /*******************************************************
@@ -36,14 +36,14 @@ import auth from '@react-native-firebase/auth';
  * FIREBASE                                            \
  ******************************************************/
 // Custom context pour la gestion globale du state du status d'auth avec son setter.
-import {AuthContext} from './../contexts/AuthContext';
+import { AuthContext } from './../contexts/AuthContext';
 
 /*******************************************************
  *  Traitement de formulaire                           \
  ******************************************************/
 
 // Librairie de traitement de formulaire
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 // librairie de validation de données
 
 import * as yup from 'yup';
@@ -53,7 +53,7 @@ import touchID from 'react-native-touch-id';
 
 // Keychain
 import * as Keychain from 'react-native-keychain';
-import {LogBox} from 'react-native';
+import { LogBox } from 'react-native';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -61,7 +61,7 @@ export default function LoginScreen() {
   const theme = useTheme();
 
   const authenContext = useContext(AuthContext);
-  const {setAuthenticated} = authenContext;
+  const { setAuthenticated } = authenContext;
 
   // vérif accord pour le touch id
   const [isTouchID, setIsTouchID] = useState(false);
@@ -75,7 +75,7 @@ export default function LoginScreen() {
     touched,
   } = useFormik({
     initialValues: {
-      email: 'jane@gmail.com',
+      email: 'ddhuille@gmail.com',
       password: '123456',
     },
     onSubmit: values => login(values),
@@ -104,7 +104,7 @@ export default function LoginScreen() {
   }, [isTouchID]);
 
   const login = values => {
-    const {email, password} = values;
+    const { email, password } = values;
     // Condition de connexion ok
     auth()
       .signInWithEmailAndPassword(email, password)
@@ -151,7 +151,7 @@ export default function LoginScreen() {
     try {
       const credentials = await Keychain.getGenericPassword();
       if (credentials) {
-        login({email: credentials.username, password: credentials.password});
+        login({ email: credentials.username, password: credentials.password });
       }
     } catch (err) {
       console.log('====================================');
