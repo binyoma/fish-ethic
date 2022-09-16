@@ -1,5 +1,12 @@
-import {View, Text, Button, StyleSheet, Dimensions} from 'react-native';
-import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {
   VStack,
   Box,
@@ -11,8 +18,16 @@ import {
   ScrollView,
   useTheme,
 } from 'native-base';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {getStations} from '../services/HubEauApiCall';
+
+/**
+ * Google firebase
+ */
+
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+
 const styles = StyleSheet.create({
   container: {
     height: '100%',
@@ -26,27 +41,76 @@ const styles = StyleSheet.create({
 
 const ResearchScreen = () => {
   const [searchBy, setSearchBy] = useState('');
-  const [fish, setFish] = useState();
-  const [department, setDepartment] = useState();
-  const [startMonth, setStartMonth] = useState();
-  const [endMonth, setEndMonth] = useState();
+  const [selectedFish, setSelectedFish] = useState('');
+  const [department, setDepartment] = useState('');
+  const [startMonth, setStartMonth] = useState('');
+  const [endMonth, setEndMonth] = useState('');
+  const [stations, setStations] = useState([]);
+  const [markers, setMarkers] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [AllFish, setAllFish] = useState([]);
+  const [loading, setLoading] = useState(true);
   const theme = useTheme();
-  return (
+
+  const searchStation = () => {
+    getStations(selectedFish, department, startMonth, endMonth).then(data => {
+      setStations(data);
+      stations.features.forEach(station => {
+        markers.push({
+          title: station.properties.localisation,
+          coordinates: {
+            latitude: station.properties.y,
+            longitude: station.properties.x,
+          },
+        });
+      });
+    });
+  };
+  useEffect(() => {
+    firestore()
+      .collection('fish')
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          AllFish.push(doc.data());
+        });
+      })
+      .then(
+        firestore()
+          .collection('department_code')
+          .get()
+          .then(querySnapshot => {
+            querySnapshot.forEach(doc => {
+              departments.push(doc.data());
+            });
+            setLoading(false);
+          })
+          
+      )
+      .catch(error => {
+        console.log('Error getting documents: ', error.message);
+      });
+  
+  }, []);
+  return loading ? (
+    <ActivityIndicator />
+  ) : (
     <ScrollView>
       <Box>
         <VStack>
-          <Box h="300">
+          <Box h="500">
             <View style={styles.container}>
-              <MapView
-                provider={PROVIDER_GOOGLE}
-                style={styles.map}
-                region={{
-                  latitude: 37.78825,
-                  longitude: -122.4324,
-                  latitudeDelta: 0.015,
-                  longitudeDelta: 0.0121,
-                }}
-              ></MapView>
+              <MapView provider={PROVIDER_GOOGLE} style={styles.map}>
+                {markers.map((marker, index) => {
+                  return (
+                    <Marker
+                      key={index}
+                      coordinate={marker.coordinates}
+                      title={marker.title}
+                    />
+                  );
+                })}
+              </MapView>
             </View>
           </Box>
         </VStack>
@@ -56,7 +120,7 @@ const ResearchScreen = () => {
             <Box maxW="300">
               <Text>Espèce de poisson</Text>
               <Select
-                selectedValue={fish}
+                selectedValue={selectedFish}
                 minWidth="300"
                 accessibilityLabel="Espèce de poisson"
                 placeholder="Selectionnez une ou plusieurs espèce de poisson"
@@ -65,13 +129,15 @@ const ResearchScreen = () => {
                   endIcon: <CheckIcon size="5" />,
                 }}
                 mt={1}
-                onValueChange={itemValue => setFish(itemValue)}
-              >
-                <Select.Item label="Brochet" value="Brochet" />
-                <Select.Item label="Ecrevisses" value="Ecrevisses" />
-                <Select.Item label="Anguille bicolore" value="Anguille" />
-                <Select.Item label="Truite fardée" value="Truite" />
-                <Select.Item label="Anchois" value="Anchois" />
+                onValueChange={itemValue => setSelectedFish(itemValue)}>
+                {AllFish.map((fish, index) => {
+                  return (
+                    <Select.Item
+                      label={fish.name}
+                      value={fish.code_espece_poisson}
+                    />
+                  );
+                })}
               </Select>
             </Box>
             <Box maxW="300" mt="3">
@@ -86,13 +152,10 @@ const ResearchScreen = () => {
                   endIcon: <CheckIcon size="5" />,
                 }}
                 mt={1}
-                onValueChange={itemValue => setDepartment(itemValue)}
-              >
-                <Select.Item label="O1- Ain" value="ux" />
-                <Select.Item label="02- Aisne" value="web" />
-                <Select.Item label="03- Allier" value="cross" />
-                <Select.Item label="04- Alpes de hautes provence" value="ui" />
-                <Select.Item label="05- Hautes alpes" value="backend" />
+                onValueChange={itemValue => setDepartment(itemValue)}>
+                {departments.map((dept, index) => {
+                  return (<Select.Item label={dept.name} value={dept.code} />);
+                })}
               </Select>
             </Box>
             <Box maxW="300" mt="3">
@@ -107,8 +170,7 @@ const ResearchScreen = () => {
                   endIcon: <CheckIcon size="5" />,
                 }}
                 mt={1}
-                onValueChange={itemValue => setStartMonth(itemValue)}
-              >
+                onValueChange={itemValue => setStartMonth(itemValue)}>
                 <Select.Item label="Janvier" value="Janvier" />
                 <Select.Item label="Février" value="Février" />
                 <Select.Item label="Mars" value="Mars" />
@@ -135,8 +197,7 @@ const ResearchScreen = () => {
                   endIcon: <CheckIcon size="5" />,
                 }}
                 mt={1}
-                onValueChange={itemValue => setEndMonth(itemValue)}
-              >
+                onValueChange={itemValue => setEndMonth(itemValue)}>
                 <Select.Item label="Janvier" value="Janvier" />
                 <Select.Item label="Février" value="Février" />
                 <Select.Item label="Mars" value="Mars" />
@@ -156,7 +217,8 @@ const ResearchScreen = () => {
             <Button
               title="Afficher les stations"
               color={theme.colors.primary.green}
-            ></Button>
+              onPress={() => searchStation()}
+            />
           </Center>
         </VStack>
       </Box>
