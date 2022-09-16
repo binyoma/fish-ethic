@@ -19,13 +19,11 @@ import 'dayjs/locale/fr';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // firebase
 import storage from '@react-native-firebase/storage';
-const getUrl = async ref => {
-  return await ref.getDownloadURL();
-};
 
 const Card = props => {
   const [photoUrl, setPhotoUrl] = useState('');
   const item = props;
+  const url = item.props.url;
 
   const navigation = useNavigation();
 

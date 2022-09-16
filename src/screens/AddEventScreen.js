@@ -12,6 +12,7 @@ import {
   Pressable,
   useColorModeValue,
   Actionsheet,
+  Image,
   useTheme,
 } from 'native-base';
 import {useFormik} from 'formik';
@@ -31,6 +32,7 @@ import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 
 import uuid from 'react-native-uuid';
+import {ActivityIndicator} from 'react-native';
 
 const AddEventScreen = () => {
   // traitement formulaire
@@ -122,6 +124,7 @@ const AddEventScreen = () => {
   });
 
   //camera
+  const [uploadedPhoto, setUploadedPhoto] = useState(1);
   const {isOpen, onOpen, onClose} = useDisclose();
   const takePhoto = async () => {
     let options = {
@@ -138,9 +141,9 @@ const AddEventScreen = () => {
 
     if (didCancel) {
       console.log('====================================');
-      console.log("prise de photo annulée par l'utilisateur");
+      console.log("prise de photo annulé par l'utilisateur");
       toast.show({
-        title: "Prise de photo annulée par l'utilisateur",
+        title: "Prise de photo annulé par l'utilisateur",
         placement: 'bottom',
       });
       console.log('====================================');
@@ -170,9 +173,9 @@ const AddEventScreen = () => {
 
     if (didCancel) {
       console.log('====================================');
-      console.log("prise de photo annulée par l'utilisateur");
+      console.log("prise de photo annulé par l'utilisateur");
       toast.show({
-        title: "Prise de photo annulée par l'utilisateur",
+        title: "Prise de photo annulé par l'utilisateur",
         placement: 'bottom',
       });
       console.log('====================================');
@@ -183,6 +186,7 @@ const AddEventScreen = () => {
     } else {
       const img = assets[0];
       console.log('photo ok');
+      setUploadedPhoto(2);
       uploadPhoto(img);
     }
   };
@@ -197,6 +201,7 @@ const AddEventScreen = () => {
       console.log('====================================');
       reference.getDownloadURL().then(url => {
         setFieldValue('url', url);
+        setUploadedPhoto(3);
         console.log(url);
       });
       toast.show({
@@ -215,8 +220,21 @@ const AddEventScreen = () => {
         createdAt: firestore.FieldValue.serverTimestamp(),
         user_id: auth().currentUser.uid,
       })
-      .then(async newAdvert => {
-        console.log('ajout ok');
+      .then(async newEvent => {
+        const event = firestore().collection('events').doc(newEvent.id);
+        event.get().then(doc => {
+          if (doc.exists) {
+            const data = doc.data();
+            delete data.user_id;
+            data.id = newEvent.id;
+            const user = firestore()
+              .collection('users')
+              .doc(auth().currentUser.uid);
+            user.update({
+              events: firestore.FieldValue.arrayUnion(data),
+            });
+          }
+        });
         toast.show({
           description: 'Evenement crée avec succès !',
         });
@@ -235,6 +253,52 @@ const AddEventScreen = () => {
               onChangeText={handleChange('title')}
             />
             <FormControl.ErrorMessage>{errors?.title}</FormControl.ErrorMessage>
+          </FormControl>
+          <FormControl isInvalid={touched.url && errors?.url}>
+            {uploadedPhoto == 1 ? (
+              <Center>
+                <FormControl.Label>Ajouter une photo</FormControl.Label>
+                <Pressable onPress={onOpen}>
+                  <Center>
+                    <Ionicons
+                      name="camera-sharp"
+                      size={40}
+                      color={useColorModeValue('#000', '#FFF')}
+                    />
+                  </Center>
+                </Pressable>
+              </Center>
+            ) : uploadedPhoto == 2 ? (
+              <Center>
+                <FormControl.Label>Ajout encours</FormControl.Label>
+                <ActivityIndicator />
+                <FormControl.ErrorMessage>
+                  {errors?.url}
+                </FormControl.ErrorMessage>
+              </Center>
+            ) : uploadedPhoto == 3 ? (
+              <Center>
+                <Image
+                  source={{uri: values.url}}
+                  size="2xl"
+                  alt="image de l'évenement"
+                  margin={2}
+                />
+                <FormControl.Label>Modifier la photo</FormControl.Label>
+                <Pressable onPress={onOpen}>
+                  <Center>
+                    <Ionicons
+                      name="camera-sharp"
+                      size={40}
+                      color={useColorModeValue('#000', '#FFF')}
+                    />
+                  </Center>
+                </Pressable>
+                <FormControl.ErrorMessage>
+                  {errors?.url}
+                </FormControl.ErrorMessage>
+              </Center>
+            ) : null}
           </FormControl>
           <FormControl isInvalid={touched.place && errors?.place}>
             <FormControl.Label>Lieu</FormControl.Label>
@@ -341,20 +405,7 @@ const AddEventScreen = () => {
                 })}
             </Center>
           </HStack>
-          <Pressable onPress={onOpen}>
-            <Center>
-              <Ionicons
-                name="camera-sharp"
-                size={40}
-                color={useColorModeValue('#000', '#FFF')}
-              />
-            </Center>
-          </Pressable>
-          <Button
-            bg={theme.colors.primary.green}
-            onPress={handleSubmit}
-            margin="5"
-          >
+          <Button colorScheme="green" onPress={handleSubmit} margin="5">
             Publier
           </Button>
         </Box>
