@@ -46,12 +46,7 @@ const Card = props => {
         >
           <Box>
             <AspectRatio w="100%" ratio={16 / 9}>
-              {/* { (url !=="undefined" ) ??
-                <Image
-                  h="100%"
-                  source={{uri:url }}
-                  alt="image"
-                /> } */}
+              <Image h="100%" source={{uri: item?.props?.url}} alt="image" />
             </AspectRatio>
           </Box>
           <Stack p="4" space={3}>

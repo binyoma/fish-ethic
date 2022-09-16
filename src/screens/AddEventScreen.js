@@ -13,6 +13,7 @@ import {
   useColorModeValue,
   Actionsheet,
   Image,
+  useTheme,
 } from 'native-base';
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
@@ -52,7 +53,7 @@ const AddEventScreen = () => {
   const heureFinInputRef = useRef(null);
   // toast de notification de l'utilisateur
   const toast = useToast();
-
+  const theme = useTheme();
   const validationSchema = Yup.object({
     title: Yup.string().required('Le titre est requis'),
     place: Yup.string().required('Le lieu est requis'),

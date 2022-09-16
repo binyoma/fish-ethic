@@ -160,6 +160,19 @@ const CustomHeader = () => {
         </Center>
       </HStack>
     </Box>
+  ) : route.name == 'profilUsers' ? (
+    <Box>
+      <HStack bg={useColorModeValue(theme.colors.primary.green, 'black')} p="4">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" color="white" size={30} />
+        </TouchableOpacity>
+        <Center ml="2">
+          <Text color="white" fontSize="20">
+            INFOS PROFIL
+          </Text>
+        </Center>
+      </HStack>
+    </Box>
   ) : null;
 };
 
