@@ -80,6 +80,7 @@ const MoreInfoScreen = props => {
   const theme = useTheme();
   const publisherId = item.props.user_id;
   const currentUserId = auth().currentUser.uid;
+
   return loading ? (
     <ActivityIndicator />
   ) : (
@@ -156,7 +157,7 @@ const MoreInfoScreen = props => {
               <Text>"Il n'y a pas de participants pour l'instant!"</Text>
             )}
           </Stack>
-          {publisherId == currentUserId ? (
+          {publisherId != currentUserId ? (
             <Button
               onPress={() => {
                 subscribEvent();

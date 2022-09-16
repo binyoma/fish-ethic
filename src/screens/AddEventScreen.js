@@ -126,8 +126,9 @@ const AddEventScreen = () => {
   const takePhoto = async () => {
     let options = {
       mediaType: 'photo',
-      maxWidth: 500,
-      maxHeight: 500,
+      maxWidth: 200,
+      maxHeight: 200,
+      quality: 0.5,
       includeBase64: true,
       saveToPhotos: true,
     };
@@ -158,8 +159,9 @@ const AddEventScreen = () => {
     const response = await launchImageLibrary(options);
     let options = {
       mediaType: 'photo',
-      maxWidth: 500,
-      maxHeight: 500,
+      maxWidth: 200,
+      maxHeight: 200,
+      quality: 0.5,
       includeBase64: true,
       saveToPhotos: true,
     };

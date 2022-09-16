@@ -1,5 +1,5 @@
-import { ActivityIndicator } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import {ActivityIndicator} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
 // NATIVE BASE
 import {
   Box,
@@ -40,14 +40,13 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 
 import Card from '../components/Card';
 // Hook React navigation pour accéder au context de la react-navigation
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
 
 const AccountScreen = () => {
-
   // toast de notification
   const toast = useToast();
 
@@ -58,18 +57,17 @@ const AccountScreen = () => {
     firestore()
       .collection('users')
       .doc(id)
-      .onSnapshot(
-        docSnap => {
-          const data = docSnap.data();
-          setInitialValues({
-            firstname: data['firstname'],
-            name: data['name'],
-            image: data['image'],
-            level: data['level'],
-            fishing_techniques: data['fishing_techniques'],
-            email: data['email'],
-          });
+      .onSnapshot(docSnap => {
+        const data = docSnap.data();
+        setInitialValues({
+          firstname: data['firstname'],
+          name: data['name'],
+          image: data['image'],
+          level: data['level'],
+          fishing_techniques: data['fishing_techniques'],
+          email: data['email'],
         });
+      });
   }, []);
   ///////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////
@@ -82,7 +80,7 @@ const AccountScreen = () => {
     const oldevents = firestore()
       .collection('events')
       .where('user_id', '==', user_id)
-      .where('endAt', "<=", new Date())
+      .where('endAt', '<=', new Date())
       .onSnapshot(
         querySnapshot => {
           const eventsArray = [];
@@ -97,7 +95,7 @@ const AccountScreen = () => {
         },
         error => {
           console.log(error.massage);
-          console.log("erreur old");
+          console.log('erreur old');
         },
       );
     // Détacher un écouteur
@@ -110,7 +108,7 @@ const AccountScreen = () => {
     const events = firestore()
       .collection('events')
       .where('user_id', '==', user_id)
-      .where('endAt', ">=", new Date())
+      .where('endAt', '>=', new Date())
       .onSnapshot(
         querySnapshot => {
           const eventsArray = [];
@@ -123,16 +121,16 @@ const AccountScreen = () => {
           setevents(eventsArray);
           setLoading(false);
         },
-        (error) => {
+        error => {
           console.log(error.massage);
-          console.log("erreur old");
+          console.log('erreur old');
         },
       );
     return () => events();
   }, []);
 
   ///////////////////////////////////////////////////////////////
-  const renderItem = ({ item }) => <Card props={item} />;
+  const renderItem = ({item}) => <Card props={item} />;
 
   //////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////
@@ -142,12 +140,15 @@ const AccountScreen = () => {
     <Center flex={'1'} bgColor="warmGray.5">
       <ScrollView w="full">
         <Box w="95%" mx="auto" px="1">
-
           <Box alignItems="center">
-            <Avatar bg="green.500" mt="5" size="2xl" source={{
-              uri: initialValues.image
-            }}>
-
+            <Avatar
+              bg="green.500"
+              mt="5"
+              size="2xl"
+              source={{
+                uri: initialValues.image,
+              }}
+            >
               <Avatar.Badge
                 size="8"
                 justifyContent="center"
@@ -158,27 +159,39 @@ const AccountScreen = () => {
                   <Ionicons name="checkmark" size={10} color="white" />
                 </Center>
               </Avatar.Badge>
-
             </Avatar>
-            <Text>{initialValues.firstname} {initialValues.name}</Text>
-            <Button colorScheme="green" onPress={() => navigation.navigate('Modification')}
-              rightIcon={<Ionicons name="pencil-outline" size={20} color="white" />
+            <Text>
+              {initialValues.firstname} {initialValues.name}
+            </Text>
+            <Button
+              colorScheme="green"
+              onPress={() => navigation.navigate('Modification')}
+              rightIcon={
+                <Ionicons name="pencil-outline" size={20} color="white" />
               }
             >
               Modifier le profil
             </Button>
             <Divider my={2} mt="5" />
-            <Text mt="5"><Ionicons name="ios-mail-sharp" size={10} /> {initialValues.email} </Text>
-            <Text><Ionicons name="bar-chart-outline" size={10} /> {initialValues.level} </Text>
-            <Text><FontAwesomeIcon name="fish" size={10} /> {initialValues.fishing_techniques}</Text>
+            <Text mt="5">
+              <Ionicons name="ios-mail-sharp" size={10} /> {initialValues.email}{' '}
+            </Text>
+            <Text>
+              <Ionicons name="bar-chart-outline" size={10} />{' '}
+              {initialValues.level}{' '}
+            </Text>
+            <Text>
+              <FontAwesomeIcon name="fish" size={10} />{' '}
+              {initialValues.fishing_techniques}
+            </Text>
             <Divider my={2} mt="5" />
           </Box>
 
           <Box>
             <Center>
-              <Text >MES SORTIES A VENIR</Text>
+              <Text>MES SORTIES A VENIR</Text>
             </Center>
-            <Stack direction="row" space="3" mt="5" >
+            <Stack direction="row" space="3" mt="5">
               <FlatList
                 horizontal={true}
                 data={events}
@@ -209,8 +222,7 @@ const AccountScreen = () => {
         </Box>
       </ScrollView>
     </Center>
-  )
-}
+  );
+};
 
-export default AccountScreen
-
+export default AccountScreen;
