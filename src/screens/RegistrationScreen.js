@@ -174,14 +174,18 @@ export default function RegistrationScreen() {
               </FormControl.ErrorMessage>
             </FormControl>
 
-            <FormControl mt="5" isInvalid={errors?.Checkbox}>
+            <FormControl mt="5" isInvalid={touched.Checkbox && errors?.Checkbox}>
+
               {console.log("log1", values.Checkbox)}
-              <Checkbox colorScheme="green" value={true || false} onChange={value => {
+
+              <Checkbox colorScheme="green" value={true} onChange={value => {
                 values.Checkbox = value;
-                // setInitialValues({ Checkbox: value });
+
+                //setInitialValues({ Checkbox: value });
 
                 console.log("log2", initialValues.Checkbox);
               }}>
+
                 <Link
                   onPress={() => navigation.navigate('TermsOfUseScreen')}
                   _text={{
@@ -197,7 +201,6 @@ export default function RegistrationScreen() {
                 {errors?.Checkbox}
               </FormControl.ErrorMessage>
             </FormControl>
-
             <Button mt="5" bg={theme.colors.primary.green} onPress={handleSubmit}>
               S'inscrire
             </Button>
