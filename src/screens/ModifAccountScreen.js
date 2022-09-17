@@ -326,16 +326,16 @@ const ModifAccountScreen = () => {
                         </Button>
 
                         <Button colorScheme='red' onPress={() => {
-                            const user_id = auth().currentUser.uid;
-                            const del = firestore()
-                                .collection("events")
-                                .where('user_id', '==', user_id)
-                                .delete()
-                                .then(() => {
-                                    console.log("Document successfully deleted!");
-                                }).catch((error) => {
-                                    console.error("Error removing document: ", error);
-                                });
+                            // const user_id = auth().currentUser.uid;
+                            // const del = firestore()
+                            //     .collection("events")
+                            //     .where('user_id', '==', user_id)
+                            //     .delete()
+                            //     .then(() => {
+                            //         console.log("Document successfully deleted!");
+                            //     }).catch((error) => {
+                            //         console.error("Error removing document: ", error);
+                            //     });
                             auth().currentUser.delete().then(() => {
                                 // User deleted.
                                 // logout();
