@@ -362,3 +362,4 @@ const ModifAccountScreen = () => {
         </Center >
     );
 }
+export default ModifAccountScreen
