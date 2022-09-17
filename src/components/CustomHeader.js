@@ -108,17 +108,6 @@ const CustomHeader = () => {
           </Text>
         </Center>
       </HStack>
-      <Input
-        placeholder="Search"
-        width="100%"
-        borderRadius="4"
-        py="3"
-        px="1"
-        fontSize="14"
-        InputLeftElement={
-          <Icon m="2" ml="3" size="6" as={<Ionicons name="search" />} />
-        }
-      />
     </Box>
   ) : route.name == 'Add' ? (
     <Box>
@@ -168,6 +157,19 @@ const CustomHeader = () => {
 
         <Center h="20">
           <Heading>FISHETHIC</Heading>
+        </Center>
+      </HStack>
+    </Box>
+  ) : route.name == 'profilUsers' ? (
+    <Box>
+      <HStack bg={useColorModeValue(theme.colors.primary.green, 'black')} p="4">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" color="white" size={30} />
+        </TouchableOpacity>
+        <Center ml="2">
+          <Text color="white" fontSize="20">
+            INFOS PROFIL
+          </Text>
         </Center>
       </HStack>
     </Box>

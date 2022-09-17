@@ -19,19 +19,15 @@ import 'dayjs/locale/fr';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // firebase
 import storage from '@react-native-firebase/storage';
-const getUrl = async ref => {
-  return await ref.getDownloadURL();
-}
 
 const Card = props => {
   const [photoUrl, setPhotoUrl] = useState('');
   const item = props;
+  const url = item.props.url;
 
   const navigation = useNavigation();
 
-
   return (
-
     <Pressable
       onPress={() => navigation.navigate('MoreInfo', item)}
       margin="0.5"
@@ -50,13 +46,7 @@ const Card = props => {
         >
           <Box>
             <AspectRatio w="100%" ratio={16 / 9}>
-              {/* { item?.props?.url ??
-                <Image
-                  h="100%"
-                  source={{uri:item?.props?.url }}
-                  alt="image"
-                /> } */}
-
+              <Image h="100%" source={{ uri: item?.props?.url }} alt="image" />
             </AspectRatio>
           </Box>
           <Stack p="4" space={3}>
@@ -78,7 +68,6 @@ const Card = props => {
         </Box>
       </Box>
     </Pressable>
-
   );
 };
 

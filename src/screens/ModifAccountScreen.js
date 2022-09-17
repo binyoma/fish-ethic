@@ -65,7 +65,6 @@ const validationSchema = yup.object({
 });
 
 const ModifAccountScreen = () => {
-
     //camera
     const { isOpen, onOpen, onClose } = useDisclose();
     const takePhoto = async () => {
@@ -94,7 +93,7 @@ const ModifAccountScreen = () => {
             console.log('====================================');
         } else {
             const img = assets[0];
-            console.log("photo ok");
+            console.log('photo ok');
             uploadAvatar(img);
         }
     };
@@ -125,7 +124,7 @@ const ModifAccountScreen = () => {
             console.log('====================================');
         } else {
             const img = assets[0];
-            console.log("photo ok");
+            console.log('photo ok');
             uploadAvatar(img);
         }
     };
@@ -137,7 +136,7 @@ const ModifAccountScreen = () => {
     const [level, setLevel] = React.useState();
     const [fishing_techniques, setFishing_techniques] = React.useState();
 
-    //theme 
+    //theme
     const theme = useTheme();
     // Récupération du props navigation de react navigation
     const navigation = useNavigation();
@@ -159,7 +158,8 @@ const ModifAccountScreen = () => {
             values.level = level;
             values.fishing_techniques = fishing_techniques;
             handleUpdate(values);
-        }, validationSchema,
+        },
+        validationSchema,
 
         enableReinitialize: true,
     });
@@ -174,26 +174,26 @@ const ModifAccountScreen = () => {
                 const data = docSnap.data();
                 setLevel(data['level']);
                 setFishing_techniques(data['fishing_techniques']);
-                setInitialValues(
-                    {
-                        name: data['name'],
-                        firstname: data['firstname'],
-                        pseudo: data['pseudo'],
-                        email: data['email'],
-                        level: data['level'],
-                        fishing_techniques: data['fishing_techniques'],
-                    });
+                setInitialValues({
+                    name: data['name'],
+                    firstname: data['firstname'],
+                    pseudo: data['pseudo'],
+                    email: data['email'],
+                    level: data['level'],
+                    fishing_techniques: data['fishing_techniques'],
+                });
 
                 const user = auth().currentUser;
-                user.updateEmail(data['email']).then(() => {
-
-                    // ...
-                }).catch((error) => {
-                    // An error occurred
-                    // ...
-                });
+                user
+                    .updateEmail(data['email'])
+                    .then(() => {
+                        // ...
+                    })
+                    .catch(error => {
+                        // An error occurred
+                        // ...
+                    });
             });
-
     }, []);
 
     const handleUpdate = values => {
@@ -210,7 +210,7 @@ const ModifAccountScreen = () => {
                 console.log('user updated !');
                 console.log('====================================');
                 toast.show({
-                    title: 'Utilisateur modifier',
+                    title: 'Utilisateur modifié',
                     placement: 'bottom',
                 });
             })
@@ -230,7 +230,7 @@ const ModifAccountScreen = () => {
             console.log('image uploaded to the bucket');
             console.log('====================================');
             toast.show({
-                title: 'Photo modifier',
+                title: 'Photo modifiée',
                 placement: 'bottom',
             });
 
@@ -362,5 +362,3 @@ const ModifAccountScreen = () => {
         </Center >
     );
 }
-
-export default ModifAccountScreen

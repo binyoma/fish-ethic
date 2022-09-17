@@ -13,7 +13,8 @@ import TermsOfUseScreen from '../screens/TermsOfUseScreen';
 import MoreInfoScreen from '../screens/MoreInfoScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ModifEventScreen from '../screens/ModifEventScreen';
-import ProfilScreen from '../screens/profilScreen';
+import ProfilScreen from '../screens/profilUsersScreen';
+import ProfilUsersScreen from '../screens/profilUsersScreen';
 // react-navigation
 const Stack = createNativeStackNavigator();
 
@@ -70,7 +71,13 @@ export default function RootNavigation() {
             headerTitle: props => <CustomHeader {...props} />,
           }}
         />
-
+        <Stack.Screen
+          name="profilUsers"
+          component={ProfilUsersScreen}
+          options={{
+            header: () => <CustomHeader />,
+          }}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );

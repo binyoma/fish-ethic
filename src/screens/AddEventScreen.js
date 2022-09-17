@@ -12,6 +12,8 @@ import {
   Pressable,
   useColorModeValue,
   Actionsheet,
+  Image,
+  useTheme,
 } from 'native-base';
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
@@ -19,7 +21,7 @@ import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 // react-native-vector-icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // camera
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 /**
  * Google firebase
@@ -30,10 +32,9 @@ import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 
 import uuid from 'react-native-uuid';
+import {ActivityIndicator} from 'react-native';
 
 const AddEventScreen = () => {
- 
-  
   // traitement formulaire
   // gestion de l'affichage des pickers de date
   const [showDebutDatePicker, setShowDebutDatePicker] = useState(false);
@@ -52,21 +53,21 @@ const AddEventScreen = () => {
   const heureFinInputRef = useRef(null);
   // toast de notification de l'utilisateur
   const toast = useToast();
-
+  const theme = useTheme();
   const validationSchema = Yup.object({
     title: Yup.string().required('Le titre est requis'),
     place: Yup.string().required('Le lieu est requis'),
     startAt: Yup.date()
-      .typeError("La valeur renseigné n'est pas une date valide")
+      .typeError("La valeur renseignée n'est pas une date valide")
       .required('La date de début est requise'),
     startHour: Yup.date()
-      .typeError("La valeur renseigné n'est pas valide")
+      .typeError("La valeur renseignée n'est pas valide")
       .required("L'heure de début est requise"),
     endAt: Yup.date()
-      .typeError("La valeur renseigné n'est pas une date valide")
+      .typeError("La valeur renseignée n'est pas une date valide")
       .required('La date de fin est requise'),
     endHour: Yup.date()
-      .typeError("La valeur renseigné n'est pas valide")
+      .typeError("La valeur renseignée n'est pas valide")
       .required("L'heure de début est requise"),
     description: Yup.string().required('La description est réquise'),
   });
@@ -116,95 +117,96 @@ const AddEventScreen = () => {
       endAt: null,
       endHour: null,
       description: '',
-      url:'',
+      url: '',
     },
     onSubmit: values => createEvent(values),
     validationSchema,
   });
-  
-    //camera
-    const { isOpen, onOpen, onClose } = useDisclose();
-    const takePhoto = async () => {
-        let options = {
-            mediaType: 'photo',
-            maxWidth: 500,
-            maxHeight: 500,
-            includeBase64: true,
-            saveToPhotos: true,
-        };
-        const response = await launchCamera(options);
 
-        const { didCancel, errorCode, errorMessage, assets } = response;
-
-        if (didCancel) {
-            console.log('====================================');
-            console.log("prise de photo annulé par l'utilisateur");
-            toast.show({
-                title: "Prise de photo annulé par l'utilisateur",
-                placement: 'bottom',
-            });
-            console.log('====================================');
-        } else if (errorCode) {
-            console.log('====================================');
-            console.log(errorMessage);
-            console.log('====================================');
-        } else {
-            const img = assets[0];
-            console.log("photo ok");
-            uploadPhoto(img);
-        }
+  //camera
+  const [uploadedPhoto, setUploadedPhoto] = useState(1);
+  const {isOpen, onOpen, onClose} = useDisclose();
+  const takePhoto = async () => {
+    let options = {
+      mediaType: 'photo',
+      maxWidth: 500,
+      maxHeight: 500,
+      includeBase64: true,
+      saveToPhotos: true,
     };
+    const response = await launchCamera(options);
 
-    const getPhotoFromStorage = async () => {
-        const response = await launchImageLibrary(options);
-        let options = {
-            mediaType: 'photo',
-            maxWidth: 500,
-            maxHeight: 500,
-            includeBase64: true,
-            saveToPhotos: true,
-        };
+    const {didCancel, errorCode, errorMessage, assets} = response;
 
-        const { didCancel, errorCode, errorMessage, assets } = response;
-
-        if (didCancel) {
-            console.log('====================================');
-            console.log("prise de photo annulé par l'utilisateur");
-            toast.show({
-                title: "Prise de photo annulé par l'utilisateur",
-                placement: 'bottom',
-            });
-            console.log('====================================');
-        } else if (errorCode) {
-            console.log('====================================');
-            console.log(errorMessage);
-            console.log('====================================');
-        } else {
-            const img = assets[0];
-            console.log("photo ok");
-            uploadPhoto(img);
-        }
-    };
-     //upload avatar
-     const uploadPhoto = async img => {
-      // on crée une référence pour l'image que le souhaite update avec son nom de stockage
-  
-      const reference = storage().ref(`${uuid.v4()}.jpg`);
-      reference.putFile(img.uri).then(() => {
-          console.log('====================================');
-          console.log('image uploaded to the bucket');
-          console.log('====================================');
-          reference.getDownloadURL().then(url => {
-            setFieldValue('url', url);
-            console.log(url);
-        });
-          toast.show({
-              title: 'Photo uploaded',
-              placement: 'bottom',
-          });
+    if (didCancel) {
+      console.log('====================================');
+      console.log("prise de photo annulé par l'utilisateur");
+      toast.show({
+        title: "Prise de photo annulé par l'utilisateur",
+        placement: 'bottom',
       });
-     
-    
+      console.log('====================================');
+    } else if (errorCode) {
+      console.log('====================================');
+      console.log(errorMessage);
+      console.log('====================================');
+    } else {
+      const img = assets[0];
+      console.log('photo ok');
+      uploadPhoto(img);
+    }
+  };
+
+  const getPhotoFromStorage = async () => {
+    const response = await launchImageLibrary(options);
+    let options = {
+      mediaType: 'photo',
+      maxWidth: 500,
+      maxHeight: 500,
+      includeBase64: true,
+      saveToPhotos: true,
+    };
+
+    const {didCancel, errorCode, errorMessage, assets} = response;
+
+    if (didCancel) {
+      console.log('====================================');
+      console.log("prise de photo annulé par l'utilisateur");
+      toast.show({
+        title: "Prise de photo annulé par l'utilisateur",
+        placement: 'bottom',
+      });
+      console.log('====================================');
+    } else if (errorCode) {
+      console.log('====================================');
+      console.log(errorMessage);
+      console.log('====================================');
+    } else {
+      const img = assets[0];
+      console.log('photo ok');
+      setUploadedPhoto(2);
+      uploadPhoto(img);
+    }
+  };
+  //upload avatar
+  const uploadPhoto = async img => {
+    // on crée une référence pour l'image que le souhaite update avec son nom de stockage
+
+    const reference = storage().ref(`${uuid.v4()}.jpg`);
+    reference.putFile(img.uri).then(() => {
+      console.log('====================================');
+      console.log('image uploaded to the bucket');
+      console.log('====================================');
+      reference.getDownloadURL().then(url => {
+        setFieldValue('url', url);
+        setUploadedPhoto(3);
+        console.log(url);
+      });
+      toast.show({
+        title: 'Photo uploaded',
+        placement: 'bottom',
+      });
+    });
   };
 
   // firestore
@@ -216,8 +218,21 @@ const AddEventScreen = () => {
         createdAt: firestore.FieldValue.serverTimestamp(),
         user_id: auth().currentUser.uid,
       })
-      .then(async newAdvert => {
-        console.log("ajout ok")
+      .then(async newEvent => {
+        const event = firestore().collection('events').doc(newEvent.id);
+        event.get().then(doc => {
+          if (doc.exists) {
+            const data = doc.data();
+            delete data.user_id;
+            data.id = newEvent.id;
+            const user = firestore()
+              .collection('users')
+              .doc(auth().currentUser.uid);
+            user.update({
+              events: firestore.FieldValue.arrayUnion(data),
+            });
+          }
+        });
         toast.show({
           description: 'Evenement crée avec succès !',
         });
@@ -231,16 +246,62 @@ const AddEventScreen = () => {
           <FormControl isInvalid={touched.title && errors?.title}>
             <FormControl.Label>Titre</FormControl.Label>
             <Input
-              placeholder="Indiquer le titre"
+              placeholder="Indiquez le titre"
               value={values.title}
               onChangeText={handleChange('title')}
             />
             <FormControl.ErrorMessage>{errors?.title}</FormControl.ErrorMessage>
           </FormControl>
+          <FormControl isInvalid={touched.url && errors?.url}>
+            {uploadedPhoto == 1 ? (
+              <Center>
+                <FormControl.Label>Ajouter une photo</FormControl.Label>
+                <Pressable onPress={onOpen}>
+                  <Center>
+                    <Ionicons
+                      name="camera-sharp"
+                      size={40}
+                      color={useColorModeValue('#000', '#FFF')}
+                    />
+                  </Center>
+                </Pressable>
+              </Center>
+            ) : uploadedPhoto == 2 ? (
+              <Center>
+                <FormControl.Label>Ajout encours</FormControl.Label>
+                <ActivityIndicator />
+                <FormControl.ErrorMessage>
+                  {errors?.url}
+                </FormControl.ErrorMessage>
+              </Center>
+            ) : uploadedPhoto == 3 ? (
+              <Center>
+                <Image
+                  source={{uri: values.url}}
+                  size="2xl"
+                  alt="image de l'évenement"
+                  margin={2}
+                />
+                <FormControl.Label>Modifier la photo</FormControl.Label>
+                <Pressable onPress={onOpen}>
+                  <Center>
+                    <Ionicons
+                      name="camera-sharp"
+                      size={40}
+                      color={useColorModeValue('#000', '#FFF')}
+                    />
+                  </Center>
+                </Pressable>
+                <FormControl.ErrorMessage>
+                  {errors?.url}
+                </FormControl.ErrorMessage>
+              </Center>
+            ) : null}
+          </FormControl>
           <FormControl isInvalid={touched.place && errors?.place}>
             <FormControl.Label>Lieu</FormControl.Label>
             <Input
-              placeholder="Indiquer le lieu"
+              placeholder="Indiquez le lieu"
               value={values.place}
               onChangeText={handleChange('place')}
             />
@@ -342,15 +403,6 @@ const AddEventScreen = () => {
                 })}
             </Center>
           </HStack>
-          <Pressable onPress={onOpen}>
-            <Center>
-              <Ionicons
-                name="camera-sharp"
-                size={40}
-                color={useColorModeValue('#000', '#FFF')}
-              />
-            </Center>
-          </Pressable>
           <Button colorScheme="green" onPress={handleSubmit} margin="5">
             Publier
           </Button>
