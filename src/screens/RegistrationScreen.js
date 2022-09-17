@@ -47,6 +47,8 @@ const validationSchema = yup.object({
   pseudo: yup
     .string()
     .required('Le pseudo est requis'),
+
+
   Checkbox: yup
     .boolean()
     .oneOf([true], "Vous devez accepter les conditions générales"),
@@ -71,7 +73,7 @@ export default function RegistrationScreen() {
     pseudo: '',
     Checkbox: false,
   })
-  const { values, handleChange, handleSubmit, errors, touched } = useFormik({
+  const { values, handleChange, handleSubmit, errors, touched, setFieldValue } = useFormik({
     initialValues,
     onSubmit: values => signIn(values),
     validationSchema,
@@ -174,14 +176,17 @@ export default function RegistrationScreen() {
               </FormControl.ErrorMessage>
             </FormControl>
 
-            <FormControl mt="5" isInvalid={errors?.Checkbox}>
-              {console.log("log1", values.Checkbox)}
-              <Checkbox colorScheme="green" value={true || false} onChange={value => {
-                values.Checkbox = value;
-                // setInitialValues({ Checkbox: value });
+            <FormControl mt="5" isInvalid={touched.Checkbox && errors?.Checkbox}>
 
-                console.log("log2", initialValues.Checkbox);
+              {console.log("log1", values.Checkbox)}
+
+              <Checkbox colorScheme="green" value={values.Checkbox} onChange={value => {
+                // values.Checkbox = value;
+                setFieldValue("Checkbox", !values.Checkbox)
+
+                console.log("log2", values.Checkbox);
               }}>
+
                 <Link
                   onPress={() => navigation.navigate('TermsOfUseScreen')}
                   _text={{
@@ -197,7 +202,6 @@ export default function RegistrationScreen() {
                 {errors?.Checkbox}
               </FormControl.ErrorMessage>
             </FormControl>
-
             <Button mt="5" bg={theme.colors.primary.green} onPress={handleSubmit}>
               S'inscrire
             </Button>
