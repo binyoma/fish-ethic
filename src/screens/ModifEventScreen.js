@@ -1,4 +1,3 @@
-import {View, Text, ActivityIndicator} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Actionsheet,
@@ -26,7 +25,6 @@ import storage from '@react-native-firebase/storage';
  */
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 import uuid from 'react-native-uuid';
 import {useNavigation} from '@react-navigation/native';
 const ModifEventScreen = props => {
@@ -184,7 +182,7 @@ const ModifEventScreen = props => {
       });
       console.log('====================================');
     } else if (errorCode) {
-      console.log('coucou====================================');
+      console.log('====================================');
       console.log(errorMessage);
       console.log('====================================');
     } else {
@@ -215,7 +213,7 @@ const ModifEventScreen = props => {
       });
       console.log('====================================');
     } else if (errorCode) {
-      console.log('coucou ====================================');
+      console.log('====================================');
       console.log(errorMessage);
       console.log('====================================');
     } else {

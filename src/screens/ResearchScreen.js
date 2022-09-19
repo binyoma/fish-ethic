@@ -3,8 +3,6 @@ import React, {useState} from 'react';
 import {
   VStack,
   Box,
-  Icon,
-  HStack,
   Select,
   CheckIcon,
   Center,

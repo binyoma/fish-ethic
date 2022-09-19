@@ -101,25 +101,25 @@ const MoreInfoScreen = props => {
             ></Image>
           </AspectRatio>
         </Box>
-        <HStack justifyContent="center" mt="3">
-          <Text mr="3">{users?.pseudo}</Text>
-          <MaterialCommunityIcons
-            color={theme.colors.primary.yellow}
-            name="star"
-            size={20}
-          />
-          <Text mr="3">4.9</Text>
-          <MaterialCommunityIcons
-            color={theme.colors.primary.green}
-            name="send"
-            size={20}
-          />
-
-          <Link href="mailTo:paulinegallezot@gmail.com">
-            {' '}
-            Contacter le membre
-          </Link>
-        </HStack>
+        {publisherId != currentUserId ? (
+          <HStack justifyContent="center" mt="3">
+            <Text mr="3">{users?.pseudo}</Text>
+            <MaterialCommunityIcons
+              color={theme.colors.primary.yellow}
+              name="star"
+              size={20}
+            />
+            <Text mr="3">4.9</Text>
+            <MaterialCommunityIcons
+              color={theme.colors.primary.green}
+              name="send"
+              size={20}
+            />
+            <Link href="mailTo:paulinegallezot@gmail.com">
+              Contacter le membre
+            </Link>
+          </HStack>
+        ) : null}
         <Stack mt="4">
           <Heading>{item.props.title}</Heading>
           <Stack bg={theme.colors.primary.green} mt="5" mb="3" p="2" space="2">
