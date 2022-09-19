@@ -16,15 +16,9 @@ import {useNavigation} from '@react-navigation/native';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 // react-native-vector-icons
-import Ionicons from 'react-native-vector-icons/Ionicons';
-// firebase
-import storage from '@react-native-firebase/storage';
 
 const Card = props => {
-  const [photoUrl, setPhotoUrl] = useState('');
   const item = props;
-  const url = item.props.url;
-
   const navigation = useNavigation();
 
   return (

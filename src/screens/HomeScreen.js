@@ -13,8 +13,6 @@ import {
 import {useTheme} from 'native-base';
 import {ScrollView, TouchableOpacity} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
-import {date} from 'yup/lib/locale';
 import {useNavigation} from '@react-navigation/native';
 
 const HomeScreen = () => {

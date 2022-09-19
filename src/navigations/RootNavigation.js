@@ -61,7 +61,7 @@ export default function RootNavigation() {
           name="Modification évenement"
           component={ModifEventScreen}
           options={{
-            headerTitle: props => <CustomHeader {...props} />,
+            header: props => <CustomHeader {...props} />,
           }}
         />
         <Stack.Screen
