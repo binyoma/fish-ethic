@@ -1,23 +1,11 @@
-import React, { useContext, useEffect, useState, TouchableOpacity } from 'react';
+import React from 'react';
 // NATIVE BASE
 import {
     Box,
-    Button,
     Center,
-    FormControl,
     Heading,
-    HStack,
-    Input,
-    Link,
-    VStack,
     Text,
     ScrollView,
-    Select,
-    useToast,
-    Actionsheet,
-    useDisclose,
-    Pressable,
-    useColorModeValue,
 } from 'native-base';
 //import du theme
 import { useTheme } from 'native-base';
