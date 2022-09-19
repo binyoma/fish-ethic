@@ -326,23 +326,58 @@ const ModifAccountScreen = () => {
                         </Button>
 
                         <Button colorScheme='red' onPress={() => {
-                            // const user_id = auth().currentUser.uid;
-                            // const del = firestore()
-                            //     .collection("events")
-                            //     .where('user_id', '==', user_id)
-                            //     .delete()
-                            //     .then(() => {
-                            //         console.log("Document successfully deleted!");
-                            //     }).catch((error) => {
-                            //         console.error("Error removing document: ", error);
-                            //     });
-                            auth().currentUser.delete().then(() => {
-                                // User deleted.
-                                // logout();
-                            }).catch((error) => {
-                                // An error ocurred
-                                // ...
-                            })
+                            //    const handleUpdate = values => {
+                            //     console.log(item);
+                            //     firestore()
+                            //       .collection('events')
+                            //       .doc(item.props.id)
+                            //       .update({
+                            //         ...values,
+                            //         updatedAt: firestore.FieldValue.serverTimestamp(),
+                            //       })
+                            //       .then(updatedUser => {
+                            //         console.log('====================================');
+                            //         console.log('events updated !');
+                            //         console.log('====================================');
+                            //         toast.show({
+                            //           duration: 3000,
+                            //           title: 'sortie modifiée',
+                            //           placement: 'bottom',
+                            //         });
+                            //         setTimeout(() => {
+                            //           navigation.navigate('Home');
+                            //         }, 3500);
+                            //       })
+                            //       .catch(e => {
+                            //         console.log('====================================');
+                            //         console.log(e.message);
+                            //         console.log('====================================');
+                            //       });
+                            //   };
+                            const handleUpdate = values => {
+                                const id = auth().currentUser.uid;
+                                firestore()
+                                    .collection('users')
+                                    .doc(id)
+                                    .update({
+                                        ...values,
+                                        deleteAt: firestore.FieldValue.serverTimestamp(),
+                                    })
+                                    .then(updatedUser => {
+                                        console.log('====================================');
+                                        console.log('user updated !');
+                                        console.log('====================================');
+                                        toast.show({
+                                            title: 'Utilisateur modifié',
+                                            placement: 'bottom',
+                                        });
+                                    })
+                                    .catch(e => {
+                                        console.log('====================================');
+                                        console.log(e.massage);
+                                        console.log('====================================');
+                                    });
+                            };
                         }}>
                             SUPPRIMER MON COMPTE FISHE ETIC
                         </Button>

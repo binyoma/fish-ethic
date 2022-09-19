@@ -1,5 +1,5 @@
-import {ScrollView, TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Heading,
@@ -17,7 +17,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const MoreInfoScreen = props => {
   const item = props.route.params;
@@ -43,7 +43,7 @@ const MoreInfoScreen = props => {
     if (item.props.subscriber) {
       item.props.subscriber.map(async item => {
         const user = await firestore().collection('users').doc(item).get();
-        let data = [{pseudo: user.data().pseudo, id: item}];
+        let data = [{ pseudo: user.data().pseudo, id: item }];
         setSubscriber(data);
       });
     }
@@ -62,7 +62,7 @@ const MoreInfoScreen = props => {
       firestore()
         .collection('events')
         .doc(item.props.id)
-        .update({subscriber: data})
+        .update({ subscriber: data })
         .then(() => {
           console.log('bien enregistré');
         });
@@ -70,7 +70,7 @@ const MoreInfoScreen = props => {
       firestore()
         .collection('events')
         .doc(item.props.id)
-        .update({subscriber: [auth().currentUser.uid]})
+        .update({ subscriber: [auth().currentUser.uid] })
         .then(() => {
           console.log('bien enregistré');
         });
@@ -145,7 +145,7 @@ const MoreInfoScreen = props => {
                 return (
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate('profilUsers', {subscriber: item.id});
+                      navigation.navigate('profilUsers', { subscriber: item.id });
                     }}
                   >
                     <Text> {item.pseudo}|</Text>
@@ -179,7 +179,15 @@ const MoreInfoScreen = props => {
               >
                 MODIFIER
               </Button>
-              <Button m="3" bg={theme.colors.primary.green}>
+              <Button m="3" bg={theme.colors.primary.green}
+                onPress={() => {
+                  db.collection("events").doc(item.props.id).delete().then(() => {
+                    console.log("Document successfully deleted!");
+                  }).catch((error) => {
+                    console.error("Error removing document: ", error);
+                  });
+                }}
+              >
                 SUPPRIMER
               </Button>
             </Box>
