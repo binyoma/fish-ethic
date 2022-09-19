@@ -28,6 +28,7 @@ import {getStations} from '../services/HubEauApiCall';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
+
 const styles = StyleSheet.create({
   container: {
     height: '100%',
@@ -54,16 +55,30 @@ const ResearchScreen = () => {
 
   const searchStation = () => {
     getStations(selectedFish, department, startMonth, endMonth).then(data => {
+      console.log(data);
       setStations(data);
+      firestore()
+      .collection('fish').doc(selectedFish)
+      .get()
+      .then((doc)=>{
+        console.log('fish',selectedFish);
+        console.log('data',doc.data());
+        
+      }
+        
+      )
+      const stat =[];
       stations.features.forEach(station => {
-        markers.push({
+        stat.push({
           title: station.properties.localisation,
           coordinates: {
             latitude: station.properties.y,
             longitude: station.properties.x,
           },
+          description:`${selectedFish} est ${station.properties.nom_cours_eau}`,
         });
       });
+      setMarkers(stat)
     });
   };
   useEffect(() => {
@@ -104,10 +119,13 @@ const ResearchScreen = () => {
                 {markers.map((marker, index) => {
                   return (
                     <Marker
+                      onPress={()=>{console.log(marker.description)}}
                       key={index}
                       coordinate={marker.coordinates}
                       title={marker.title}
-                    />
+                      description={marker.description}
+                    >
+                    </Marker>
                   );
                 })}
               </MapView>
@@ -153,6 +171,7 @@ const ResearchScreen = () => {
                 }}
                 mt={1}
                 onValueChange={itemValue => setDepartment(itemValue)}>
+                  <Select.Item label="" value="" />
                 {departments.map((dept, index) => {
                   return (<Select.Item label={dept.name} value={dept.code} />);
                 })}
