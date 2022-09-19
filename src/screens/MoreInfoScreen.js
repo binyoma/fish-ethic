@@ -15,9 +15,11 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
-import firestore from '@react-native-firebase/firestore';
+import firestore, { firebase } from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
+import storage from '@react-native-firebase/storage';
+
 
 const MoreInfoScreen = props => {
   const item = props.route.params;
@@ -181,14 +183,22 @@ const MoreInfoScreen = props => {
               </Button>
               <Button m="3" bg={theme.colors.primary.green}
                 onPress={() => {
-                  db.collection("events").doc(item.props.id).delete().then(() => {
-                    console.log("Document successfully deleted!");
+                  var fileRef = storage().refFromURL(item.props.url);
+                  fileRef.delete().then(() => {
+                    console.log("img successfully deleted!");
+                    navigation.goBack();
                   }).catch((error) => {
-                    console.error("Error removing document: ", error);
+                    console.error("Error removing img: ", error);
                   });
+                  firestore()
+                    .collection("events").doc(item.props.id).delete().then(() => {
+                      console.log("Document successfully deleted!");
+                    }).catch((error) => {
+                      console.error("Error removing document: ", error);
+                    });
                 }}
               >
-                SUPPRIMER
+                SUPPRIMER {item.props.url}
               </Button>
             </Box>
           )}
