@@ -110,7 +110,10 @@ const HomeScreen = () => {
       }}
     >
       <VStack>
-        <Avatar m="2" bg="green.500" size="lg" source={{uri: item?.image}} />
+        {item.image ? (
+          <Avatar m="2" bg="green.500" size="lg" source={{uri: item.image}} />
+        ) : null}
+
         <Text textAlign="center">{item?.pseudo}</Text>
       </VStack>
     </TouchableOpacity>

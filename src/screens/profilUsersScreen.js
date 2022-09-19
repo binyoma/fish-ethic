@@ -103,23 +103,26 @@ const ProfilUsersScreen = props => {
       <ScrollView w="full">
         <Box w="95%" mx="auto" px="1">
           <Box alignItems="center">
-            <Avatar
-              bg="green.500"
-              mt="5"
-              size="2xl"
-              source={{uri: user?.image}}
-            >
-              <Avatar.Badge
-                size="8"
-                justifyContent="center"
-                backgroundColor="amber.500"
-                shadow="2"
+            {item.image ? (
+              <Avatar
+                bg="green.500"
+                mt="5"
+                size="2xl"
+                source={{uri: user.image}}
               >
-                <Center>
-                  <Ionicons name="checkmark" size={10} color="white" />
-                </Center>
-              </Avatar.Badge>
-            </Avatar>
+                <Avatar.Badge
+                  size="8"
+                  justifyContent="center"
+                  backgroundColor="amber.500"
+                  shadow="2"
+                >
+                  <Center>
+                    <Ionicons name="checkmark" size={10} color="white" />
+                  </Center>
+                </Avatar.Badge>
+              </Avatar>
+            ) : null}
+
             <Text>
               “Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do”{' '}
             </Text>
