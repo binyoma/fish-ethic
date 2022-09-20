@@ -48,34 +48,40 @@ const ResearchScreen = () => {
   const [endMonth, setEndMonth] = useState('');
   const [stations, setStations] = useState([]);
   const [markers, setMarkers] = useState([]);
-  const [departments, setDepartments] = useState([]);
   const [AllFish, setAllFish] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [warning, setWarning] = useState(false);
+  const [selectedFishData, setSelectedFishData] = useState([]);
+
   const theme = useTheme();
+  const allFish=[];
 
   const searchStation = () => {
     getStations(selectedFish, department, startMonth, endMonth).then(data => {
-      console.log(data);
-      setStations(data);
       firestore()
       .collection('fish').doc(selectedFish)
       .get()
       .then((doc)=>{
-        console.log('fish',selectedFish);
-        console.log('data',doc.data());
-        
+        setSelectedFishData(doc.data());
+        console.log(selectedFishData.menace);
+        if (selectedFishData.menace) {
+          setWarning(true)
+        }
+        console.log(warning, 'warning');
       }
         
       )
+
       const stat =[];
+      setStations(data);
       stations.features.forEach(station => {
         stat.push({
           title: station.properties.localisation,
           coordinates: {
             latitude: station.properties.y,
             longitude: station.properties.x,
-          },
-          description:`${selectedFish} est ${station.properties.nom_cours_eau}`,
+          }
         });
       });
       setMarkers(stat)
@@ -87,8 +93,15 @@ const ResearchScreen = () => {
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          AllFish.push(doc.data());
+          let data= {};
+          data={
+            id: doc.id,
+            menace: doc.data().menace,
+            name: doc.data().name,
+          }
+          allFish.push(data);
         });
+        setAllFish(allFish)
       })
       .then(
         firestore()
@@ -132,7 +145,8 @@ const ResearchScreen = () => {
             </View>
           </Box>
         </VStack>
-
+        {warning?<VStack backgroundColor={'#ffca3a'}><Text>{selectedFishData.name} est {selectedFishData.menace}</Text></VStack>:''}
+        
         <VStack mt="4">
           <Center>
             <Box maxW="300">
@@ -151,8 +165,9 @@ const ResearchScreen = () => {
                 {AllFish.map((fish, index) => {
                   return (
                     <Select.Item
+                      key={index}
                       label={fish.name}
-                      value={fish.code_espece_poisson}
+                      value={fish.id}
                     />
                   );
                 })}
@@ -173,7 +188,7 @@ const ResearchScreen = () => {
                 onValueChange={itemValue => setDepartment(itemValue)}>
                   <Select.Item label="" value="" />
                 {departments.map((dept, index) => {
-                  return (<Select.Item label={dept.name} value={dept.code} />);
+                  return (<Select.Item  key={index} label={dept.name} value={dept.code} />);
                 })}
               </Select>
             </Box>
