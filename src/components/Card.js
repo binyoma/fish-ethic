@@ -1,5 +1,5 @@
-import {StyleSheet, View} from 'react-native';
-import React, {useState} from 'react';
+import { StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
 import {
   Text,
   AspectRatio,
@@ -12,7 +12,7 @@ import {
   Center,
   Button,
 } from 'native-base';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 // react-native-vector-icons
@@ -46,7 +46,7 @@ const Card = props => {
         >
           <Box>
             <AspectRatio w="100%" ratio={16 / 9}>
-              <Image h="100%" source={{uri: item?.props?.url}} alt="image" />
+              <Image h="100%" source={{ uri: item?.props?.url }} alt="image" />
             </AspectRatio>
           </Box>
           <Stack p="4" space={3}>

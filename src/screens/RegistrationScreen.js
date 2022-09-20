@@ -12,12 +12,13 @@ import {
   HStack,
   Link,
   useToast,
+  Checkbox,
 } from 'native-base';
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 // formik
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 // firebase imports
@@ -26,7 +27,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 // import {auth, db} from '../firebase/config';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 // schema de validation
 
@@ -46,10 +47,16 @@ const validationSchema = yup.object({
   pseudo: yup
     .string()
     .required('Le pseudo est requis'),
+
+
+  Checkbox: yup
+    .boolean()
+    .oneOf([true], "Vous devez accepter les conditions générales"),
 });
 
 //import du theme
-import {useTheme} from 'native-base';
+import { useTheme } from 'native-base';
+import { useState } from 'react';
 
 export default function RegistrationScreen() {
   //theme
@@ -59,13 +66,15 @@ export default function RegistrationScreen() {
   // Toast de notification
   const toast = useToast();
   // Récupération des props useFormik
-  const {values, handleChange, handleSubmit, errors, touched} = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-      confirmPassword: '',
-      pseudo: '',
-    },
+  const [initialValues, setInitialValues] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    pseudo: '',
+    Checkbox: false,
+  })
+  const { values, handleChange, handleSubmit, errors, touched, setFieldValue } = useFormik({
+    initialValues,
     onSubmit: values => signIn(values),
     validationSchema,
   });
@@ -74,7 +83,7 @@ export default function RegistrationScreen() {
      * @var string email
      * @var string password
      */
-    const {email, password} = values;
+    const { email, password } = values;
     // Condition de connexion ok
     auth()
       .createUserWithEmailAndPassword(email.trim(), password.trim())
@@ -167,7 +176,33 @@ export default function RegistrationScreen() {
               </FormControl.ErrorMessage>
             </FormControl>
 
-            <Button bg={theme.colors.primary.green} onPress={handleSubmit}>
+            <FormControl mt="5" isInvalid={touched.Checkbox && errors?.Checkbox}>
+
+              {console.log("log1", values.Checkbox)}
+
+              <Checkbox colorScheme="green" value={values.Checkbox} onChange={value => {
+                // values.Checkbox = value;
+                setFieldValue("Checkbox", !values.Checkbox)
+
+                console.log("log2", values.Checkbox);
+              }}>
+
+                <Link
+                  onPress={() => navigation.navigate('TermsOfUseScreen')}
+                  _text={{
+                    color: theme.colors.primary.green,
+                    fontWeight: 'medium',
+                    fontSize: 'sm',
+                  }}
+                >
+                  J'accèpte les conditions générales
+                </Link>
+              </Checkbox>
+              <FormControl.ErrorMessage>
+                {errors?.Checkbox}
+              </FormControl.ErrorMessage>
+            </FormControl>
+            <Button mt="5" bg={theme.colors.primary.green} onPress={handleSubmit}>
               S'inscrire
             </Button>
           </VStack>
@@ -191,6 +226,6 @@ export default function RegistrationScreen() {
           </Box>
         </Box>
       </ScrollView>
-    </Center>
+    </Center >
   );
 }
