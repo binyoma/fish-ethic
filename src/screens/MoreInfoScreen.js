@@ -183,13 +183,13 @@ const MoreInfoScreen = props => {
               </Button>
               <Button m="3" bg={theme.colors.primary.green}
                 onPress={() => {
-                  //del image
-                  var fileRef = storage().refFromURL(item.props.url);
-                  fileRef.delete().then(() => {
-                    console.log("img successfully deleted!");
-                  }).catch((error) => {
-                    console.error("Error removing img: ", error);
-                  });
+                  // //del image
+                  // var fileRef = storage().refFromURL(item.props.url);
+                  // fileRef.delete().then(() => {
+                  //   console.log("img successfully deleted!");
+                  // }).catch((error) => {
+                  //   console.error("Error removing img: ", error);
+                  // });
                   //del event
                   firestore()
                     .collection("events").doc(item.props.id).delete().then(() => {
