@@ -194,6 +194,7 @@ const MoreInfoScreen = props => {
                   firestore()
                     .collection("events").doc(item.props.id).delete().then(() => {
                       console.log("Document successfully deleted!");
+                      navigation.goBack();
                     }).catch((error) => {
                       console.error("Error removing document: ", error);
                     });
