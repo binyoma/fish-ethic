@@ -11,6 +11,8 @@ import {
   AspectRatio,
   useTheme,
   Link,
+  Toast,
+  useToast,
 } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import dayjs from 'dayjs';
@@ -88,7 +90,6 @@ const MoreInfoScreen = props => {
       });
   };
 
-  // utilisation du theme
   const theme = useTheme();
   const publisherId = item.props.user_id;
   const currentUserId = auth().currentUser.uid;
