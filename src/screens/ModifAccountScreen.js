@@ -324,20 +324,20 @@ const ModifAccountScreen = () => {
                         <Button colorScheme='green' onPress={handleSubmit}>
                             ENREGISTRER
                         </Button>
+                        {console.log('values', values.url)}
                         <Button colorScheme='red' onPress={() => {
-
                             // //del user img
-                            // var fileRef = storage().refFromURL(values.url);
-                            // fileRef.delete().then(() => {
-                            //     console.log("img successfully deleted!");
-                            // }).catch((error) => {
-                            //     console.error("Error removing img: ", error);
-                            // });
+                            var fileRef = storage().refFromURL(values.image);
+                            fileRef.delete().then(() => {
+                                console.log("img successfully deleted!");
+                            }).catch((error) => {
+                                console.error("Error removing img: ", error);
+                            });
 
                             // //del event map
                             const arrayEvents = values.events;
                             arrayEvents.map((element, index) => {
-                                console.log('element/index', element.id);
+                                console.log('url', element.url);
                                 //del image
                                 var fileRef = storage().refFromURL(element.url);
                                 fileRef.delete().then(() => {
@@ -366,7 +366,13 @@ const ModifAccountScreen = () => {
                                 });
 
                             // del compte
-
+                            auth().currentUser.delete().then(() => {
+                                console.log("User deleted.");
+                                // logout();
+                            }).catch((error) => {
+                                // An error ocurred
+                                // ...
+                            })
 
                         }}>
                             SUPPRIMER MON COMPTE FISHE ETIC
