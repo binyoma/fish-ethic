@@ -1,4 +1,4 @@
-import {ScrollView, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, ScrollView, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   Box,
@@ -35,7 +35,6 @@ const MoreInfoScreen = props => {
         .doc(user_id)
         .onSnapshot(documentSnapshot => {
           setUsers(documentSnapshot.data());
-          setLoading(false);
         });
     }
   }, []);
@@ -52,7 +51,7 @@ const MoreInfoScreen = props => {
         }
       });
     }
-  }, [loading]);
+  }, [subscriber]);
   console.log(subscriber);
   // inscription à une sortie
   const subscribEvent = async () => {
@@ -60,7 +59,6 @@ const MoreInfoScreen = props => {
       .collection('events')
       .doc(item.props.id)
       .get();
-
     if (event.data().subscriber) {
       let data = [...event.data().subscriber, auth().currentUser.uid];
 
@@ -81,6 +79,15 @@ const MoreInfoScreen = props => {
         });
     }
   };
+  const deleteSubscriber = () => {
+    firestore()
+      .doc(item.props.id)
+      .delete({subscriber: [auth().currentUser.uid]})
+      .then(() => {
+        console.log('suppression');
+      });
+  };
+
   // utilisation du theme
   const theme = useTheme();
   const publisherId = item.props.user_id;
@@ -161,6 +168,17 @@ const MoreInfoScreen = props => {
                       <Text>
                         {item.pseudo}{' '}
                         {index == subscriber.length - 1 ? null : ' | '}
+                        {item.id == currentUserId ? (
+                          <TouchableOpacity
+                            onPress={() => deleteSubscriber(subscriber)}
+                          >
+                            <MaterialCommunityIcons
+                              color={theme.colors.primary.yellow}
+                              name="alpha-x-circle"
+                              size={20}
+                            />
+                          </TouchableOpacity>
+                        ) : null}
                       </Text>
                     </TouchableOpacity>
                   );

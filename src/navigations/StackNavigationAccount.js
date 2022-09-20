@@ -3,6 +3,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AccountScreen from '../screens/AccountScreen';
 import ModifAccountScreen from '../screens/ModifAccountScreen';
+import CustomHeader from '../components/CustomHeader';
 
 const Stack = createNativeStackNavigator();
 const StackNavigation = () => {
@@ -13,7 +14,11 @@ const StackNavigation = () => {
         options={{headerShown: false}}
         component={AccountScreen}
       />
-      <Stack.Screen name="Modification" component={ModifAccountScreen} />
+      <Stack.Screen
+        name="Modification"
+        options={{header: () => <CustomHeader />}}
+        component={ModifAccountScreen}
+      />
     </Stack.Navigator>
   );
 };
