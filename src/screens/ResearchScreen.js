@@ -58,33 +58,35 @@ const ResearchScreen = () => {
   const allFish=[];
 
   const searchStation = () => {
+    setWarning(false)
     getStations(selectedFish, department, startMonth, endMonth).then(data => {
       firestore()
       .collection('fish').doc(selectedFish)
       .get()
       .then((doc)=>{
         setSelectedFishData(doc.data());
-        console.log(selectedFishData.menace);
         if (selectedFishData.menace) {
           setWarning(true)
         }
-        console.log(warning, 'warning');
       }
         
       )
 
       const stat =[];
       setStations(data);
-      stations.features.forEach(station => {
-        stat.push({
-          title: station.properties.localisation,
-          coordinates: {
-            latitude: station.properties.y,
-            longitude: station.properties.x,
-          }
+      if(stations.length!= 0){
+        stations.features.forEach(station => {
+          stat.push({
+            title: station.properties.localisation,
+            coordinates: {
+              latitude: station.properties.y,
+              longitude: station.properties.x,
+            }
+          });
         });
-      });
-      setMarkers(stat)
+        setMarkers(stat)
+      }
+      
     });
   };
   useEffect(() => {
