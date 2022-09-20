@@ -1,0 +1,44 @@
+{
+    "email": "ddhuille@gmail.com",
+    "events": [
+        {
+            "createdAt": [FirestoreTimestamp
+            ],
+            "description": "Test suppr 1",
+            "endAt": [FirestoreTimestamp
+            ],
+            "endHour": [FirestoreTimestamp
+            ],
+            "id": "ET7QtG2lTVmZEAqGwdlL",
+            "place": "Amiens",
+            "startAt": [FirestoreTimestamp
+            ],
+            "startHour": [FirestoreTimestamp
+            ],
+            "title": "Test suppr 1",
+            "url": "https://firebasestorage.googleapis.com/v0/b/fish-ethic-20190.appspot.com/o/bc2a85cf-213e-44fc-9adc-7cff9762ff7b.jpg?alt=media&token=ac748e2e-f3a8-4477-af3d-5f40401289b8"
+        },
+        {
+            "createdAt": [FirestoreTimestamp
+            ],
+            "description": "Test suppr 2",
+            "endAt": [FirestoreTimestamp
+            ],
+            "endHour": [FirestoreTimestamp
+            ],
+            "id": "c9UFNFiZiBUEHhecrns6",
+            "place": "Amiens",
+            "startAt": [FirestoreTimestamp
+            ],
+            "startHour": [FirestoreTimestamp
+            ],
+            "title": "Test suppr 2",
+            "url": "https://firebasestorage.googleapis.com/v0/b/fish-ethic-20190.appspot.com/o/a5d12cc5-dbe1-4069-9387-622e0abfaa14.jpg?alt=media&token=8d3ec2b4-6c50-4910-851b-c4c2c3390480"
+        }
+    ],
+    "firstname": undefined,
+    "fishing_techniques": undefined,
+    "level": undefined,
+    "name": undefined,
+    "pseudo": "Dylan"
+}

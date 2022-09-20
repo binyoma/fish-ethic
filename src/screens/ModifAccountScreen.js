@@ -312,7 +312,7 @@ const ModifAccountScreen = () => {
                             onValueChange={(itemValue) => setFishing_techniques(itemValue)}
                         >
                             <Select.Item label="LA PÊCHE AU TOC" value="LA PÊCHE AU TOC" />
-                            <Select.Item label="LA PÊCHE AUX LEURRES" value="LA PÊCHE AUX LEURRES" />
+                            <Select.Item label="LA PÊCHE AUX LEUFRRES" value="LA PÊCHE AUX LEURRES" />
                             <Select.Item label="LA PÊCHE À LA MOUCHE" value="LA PÊCHE À LA MOUCHE" />
                         </Select>
                         <Pressable onPress={onOpen}>
@@ -324,60 +324,50 @@ const ModifAccountScreen = () => {
                         <Button colorScheme='green' onPress={handleSubmit}>
                             ENREGISTRER
                         </Button>
-
                         <Button colorScheme='red' onPress={() => {
-                            //    const handleUpdate = values => {
-                            //     console.log(item);
-                            //     firestore()
-                            //       .collection('events')
-                            //       .doc(item.props.id)
-                            //       .update({
-                            //         ...values,
-                            //         updatedAt: firestore.FieldValue.serverTimestamp(),
-                            //       })
-                            //       .then(updatedUser => {
-                            //         console.log('====================================');
-                            //         console.log('events updated !');
-                            //         console.log('====================================');
-                            //         toast.show({
-                            //           duration: 3000,
-                            //           title: 'sortie modifiée',
-                            //           placement: 'bottom',
-                            //         });
-                            //         setTimeout(() => {
-                            //           navigation.navigate('Home');
-                            //         }, 3500);
-                            //       })
-                            //       .catch(e => {
-                            //         console.log('====================================');
-                            //         console.log(e.message);
-                            //         console.log('====================================');
-                            //       });
-                            //   };
-                            const handleUpdate = values => {
-                                const id = auth().currentUser.uid;
+
+                            // //del user img
+                            // var fileRef = storage().refFromURL(values.url);
+                            // fileRef.delete().then(() => {
+                            //     console.log("img successfully deleted!");
+                            // }).catch((error) => {
+                            //     console.error("Error removing img: ", error);
+                            // });
+
+                            // //del event map
+                            const arrayEvents = values.events;
+                            arrayEvents.map((element, index) => {
+                                console.log('element/index', element.id);
+                                //del image
+                                var fileRef = storage().refFromURL(element.url);
+                                fileRef.delete().then(() => {
+                                    console.log("img successfully deleted!");
+                                }).catch((error) => {
+                                    console.error("Error removing img: ", error);
+                                });
+                                //del events
                                 firestore()
-                                    .collection('users')
-                                    .doc(id)
-                                    .update({
-                                        ...values,
-                                        deleteAt: firestore.FieldValue.serverTimestamp(),
-                                    })
-                                    .then(updatedUser => {
-                                        console.log('====================================');
-                                        console.log('user updated !');
-                                        console.log('====================================');
-                                        toast.show({
-                                            title: 'Utilisateur modifié',
-                                            placement: 'bottom',
-                                        });
-                                    })
-                                    .catch(e => {
-                                        console.log('====================================');
-                                        console.log(e.massage);
-                                        console.log('====================================');
+                                    .collection("events").doc(element.id).delete().then(() => {
+                                        console.log("Document successfully deleted!");
+                                    }).catch((error) => {
+                                        console.error("Error removing document: ", error);
                                     });
-                            };
+                            }
+                            )
+                            //del profile user
+                            firestore()
+                                .collection("user")
+                                .doc(values.id)
+                                .delete()
+                                .then(() => {
+                                    console.log("Document user successfuly deleted");
+                                }).catch((error) => {
+                                    console.error("Error removing user document: ", error);
+                                });
+
+                            // del compte
+
+
                         }}>
                             SUPPRIMER MON COMPTE FISHE ETIC
                         </Button>
